@@ -1,10 +1,16 @@
-#include <iostream>
+#include <QApplication>
 #include <QGraphicsScene>
+#include <QGraphicsView>
 
-using namespace std;
-
-int main()
+int main(int argc, char *argv[])
 {
-    cout << "Hello World!" << endl;
-    return 0;
+    QApplication app(argc, argv);
+
+    QGraphicsScene scene;
+    QGraphicsView view(&scene);
+
+    view.resize(800, 600);
+    view.show();
+
+    return app.exec();
 }
