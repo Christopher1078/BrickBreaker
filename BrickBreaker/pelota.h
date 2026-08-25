@@ -2,6 +2,8 @@
 #define PELOTA_H
 
 #include <QGraphicsEllipseItem>
+#include <QBrush>
+#include <QPen>
 
 class Pelota
 {

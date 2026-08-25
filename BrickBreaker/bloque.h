@@ -2,6 +2,9 @@
 #define BLOQUE_H
 
 #include <QGraphicsRectItem>
+#include <QBrush>
+#include <QPen>
+#include <QColor>
 
 class Bloque
 {
@@ -10,7 +13,7 @@ private:
     bool destruido;
 
 public:
-    Bloque(float x, float y);
+    Bloque(float x, float y, QColor color);
 
     QGraphicsRectItem* getGrafico();
 

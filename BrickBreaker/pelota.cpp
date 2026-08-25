@@ -3,7 +3,8 @@
 Pelota::Pelota()
 {
     grafico = new QGraphicsEllipseItem(0, 0, 20, 20);
-
+    grafico->setBrush(QBrush(Qt::white));
+    grafico->setPen(QPen(QColor(180, 220, 255), 2));
     grafico->setPos(390, 500);
 
     velocidadX = 4;

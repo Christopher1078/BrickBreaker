@@ -5,6 +5,7 @@ Juego::Juego()
     escena = new QGraphicsScene();
 
     escena->setSceneRect(0, 0, 800, 600);
+    escena->setBackgroundBrush(QColor(10, 10, 20));
 
     vista = new QGraphicsView(escena);
     vista->setFixedSize(820, 620);
@@ -14,6 +15,29 @@ Juego::Juego()
 
     pelota = new Pelota();
     paleta = new Paleta();
+
+    for(int i=0;i<FILAS;i++){
+        for(int j=0;j<COLUMNAS;j++){
+            float x=j*90+40;
+            float y=i*35+40;
+
+            QColor color;
+
+            if (i == 0){
+                color = QColor(255, 50, 50);
+            }
+            else if (i == 1){
+                color = QColor(255, 180, 40);
+            }
+            else{
+                color = QColor(50, 150, 255);
+            }
+
+            bloques[i][j]=new Bloque(x,y, color);
+
+            escena->addItem(bloques[i][j]->getGrafico());
+        }
+    }
 
     escena->addItem(pelota->getGrafico());
     escena->addItem(paleta->getGrafico());
@@ -33,9 +57,22 @@ void Juego::actualizar()
 
     pelota->comprobarParedes();
 
-    if (pelota->colisionaCon(paleta->getGrafico()) && pelota->estaBajando())
+    if (pelota->colisionaCon(paleta->getGrafico()))
     {
         pelota->rebotarVertical();
+    }
+
+    for(int i=0;i<FILAS;i++){
+        for(int j=0;j<COLUMNAS;j++){
+            if(!bloques[i][j]->estaDestruido()){
+                if(pelota->colisionaCon(bloques[i][j]->getGrafico())){
+                    bloques[i][j]->destruir();
+                    escena->removeItem(bloques[i][j]->getGrafico());
+                    pelota->rebotarVertical();
+                    return;
+                }
+            }
+        }
     }
 }
 

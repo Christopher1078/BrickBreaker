@@ -2,6 +2,8 @@
 #define PALETA_H
 
 #include <QGraphicsRectItem>
+#include <QBrush>
+#include <QPen>
 
 class Paleta
 {
