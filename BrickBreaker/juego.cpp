@@ -1,14 +1,13 @@
 #include "juego.h"
 
-Juego::Juego()
+Juego::Juego(QGraphicsScene* escena, QGraphicsView* vista)
 {
-    escena = new QGraphicsScene();
+    this->escena=escena;
+    this->vista=vista;
 
     escena->setSceneRect(0, 0, 800, 600);
     escena->setBackgroundBrush(QColor(10, 10, 20));
 
-    vista = new QGraphicsView(escena);
-    vista->setFixedSize(820, 620);
     vista->installEventFilter(this);
     vista->setFocusPolicy(Qt::StrongFocus);
     vista->setFocus();
@@ -48,13 +47,12 @@ Juego::Juego()
 
     timer->start(16);
 
-    vista->show();
+    //vista->show();
 }
 
 void Juego::actualizar()
 {
     pelota->mover();
-
     pelota->comprobarParedes();
 
     if (pelota->colisionaCon(paleta->getGrafico()))
@@ -78,23 +76,22 @@ void Juego::actualizar()
 
 bool Juego::eventFilter(QObject* objeto, QEvent* evento)
 {
+
     if (evento->type() == QEvent::KeyPress)
     {
         QKeyEvent* tecla = static_cast<QKeyEvent*>(evento);
 
-        if (tecla->key() == Qt::Key_Left ||
-            tecla->key() == Qt::Key_A)
+        if (tecla->key() == Qt::Key_Left || tecla->key() == Qt::Key_A)
         {
             paleta->moverIzquierda();
+            return true;
         }
 
-        if (tecla->key() == Qt::Key_Right ||
-            tecla->key() == Qt::Key_D)
+        if (tecla->key() == Qt::Key_Right ||tecla->key() == Qt::Key_D)
         {
             paleta->moverDerecha();
+            return true;
         }
-
-        return true;
     }
 
     return QObject::eventFilter(objeto, evento);

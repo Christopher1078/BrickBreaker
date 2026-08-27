@@ -31,10 +31,9 @@ private:
     Bloque* bloques[FILAS][COLUMNAS];
 
 public:
-    Juego();
+    Juego(QGraphicsScene* escena, QGraphicsView* vista);
 
     void actualizar();
-    void keyPressEvent(QKeyEvent* evento);
 
 protected:
     bool eventFilter(QObject* objeto, QEvent* evento) override;

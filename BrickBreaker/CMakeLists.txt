@@ -18,6 +18,7 @@ add_executable(BrickBreaker
     Paleta.h
     Bloque.cpp
     Bloque.h
+    menuinicio.h menuinicio.cpp
 )
 
 target_link_libraries(BrickBreaker
