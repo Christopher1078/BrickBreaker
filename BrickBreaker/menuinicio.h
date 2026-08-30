@@ -11,12 +11,15 @@
 #include <qgraphicsitem.h>
 #include <QPushButton>
 
-#include "crearcuenta.h"
+class CrearCuenta;
 
 class MenuInicio:public QObject
 {
+    Q_OBJECT
 public:
+    MenuInicio(QGraphicsScene* escena, QGraphicsView* vista);
     MenuInicio();
+    void mostrarMenu();
 
 private:
     QGraphicsScene* escena;

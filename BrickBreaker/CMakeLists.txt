@@ -21,6 +21,8 @@ add_executable(BrickBreaker
     menuinicio.h menuinicio.cpp
     Recursos.qrc
     crearcuenta.h crearcuenta.cpp
+    usuario.h usuario.cpp
+    usermanager.h usermanager.cpp
 )
 
 qt_add_resources(BrickBreaker "recursos"
@@ -28,6 +30,8 @@ qt_add_resources(BrickBreaker "recursos"
     FILES
         imagenes/menu.png
 	imagenes/crearcuenta.png
+	imagenes/ojo1.png
+	imagenes/ojo2.png
 )
 
 target_link_libraries(BrickBreaker

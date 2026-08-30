@@ -8,20 +8,27 @@
 #include <QLineEdit>
 #include <QPushButton>
 #include <QLabel>
+#include <windows.h>
+
+#include "usermanager.h"
+
+class MenuInicio;
+
+using namespace std;
 
 class CrearCuenta: public QObject
 {
+    Q_OBJECT
 public:
     CrearCuenta(QGraphicsScene* escena, QGraphicsView* vista);
 private:
-    QGraphicsScene* escena;
-    QGraphicsView* vista;
     QLineEdit* txtNombre;
     QLineEdit* txtPassword;
     QPushButton* btnCrear;
     QPushButton* btnRegresar;
-protected:
-    bool eventFilter(QObject* objeto, QEvent* evento) override;
+    QPushButton* btnMostrar;
+    UserManager manager;
+    MenuInicio* menu;
 };
 
 #endif // CREARCUENTA_H
