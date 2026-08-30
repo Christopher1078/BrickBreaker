@@ -36,7 +36,7 @@ bool UserManager::iniciarSesion(string nombre, string password){
         MessageBox(NULL,TEXT("NO EXISTE EL USUARIO"), TEXT("ERROR"), MB_OK);
         return false;
     }
-    if(usuarios[indice]->getPassword()==password){
+    if(usuarios[indice]->getPassword()!=password){
         MessageBox(NULL,TEXT("PASSWORD INCORRECTO"), TEXT("INCORRECTO"), MB_OK);
         return false;
     }
@@ -46,7 +46,6 @@ bool UserManager::iniciarSesion(string nombre, string password){
 }
 
 void UserManager::guardarArreglo(Usuario* usuarios[]){
-    qDebug("p");
     for(int i=0;i<cantidad;i++){
         filesystem::create_directory("Usuarios/"+usuarios[i]->getNombre());
         ofstream archivo("Usuarios/"+usuarios[i]->getNombre()+"/usuario.txt",ios::trunc);

@@ -1,18 +1,15 @@
-#include "crearcuenta.h"
+#include "iniciarsesion.h"
 #include "menuinicio.h"
 
-#include <QEvent>
-#include <QKeyEvent>
-
-CrearCuenta::CrearCuenta(QGraphicsScene* escena, QGraphicsView* vista){
-    QPixmap fondo (":/imagenes/crearcuenta.png");
-    fondo=fondo.scaled(800,600,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
+IniciarSesion::IniciarSesion(QGraphicsScene *escena, QGraphicsView *vista) {
+    QPixmap fondo(":/imagenes/iniciarsesion.png");
+    fondo=fondo.scaled(800, 600, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
     QGraphicsPixmapItem* imagen=escena->addPixmap(fondo);
     imagen->setZValue(-1);
     imagen->setPos(0,0);
 
     txtNombre=new QLineEdit(vista);
-    txtNombre->setGeometry(250,255,280,50);
+    txtNombre->setGeometry(250, 273, 280, 50);
     txtNombre->setStyleSheet({
         "QLineEdit {"
         "background-color: transparent;"
@@ -23,11 +20,10 @@ CrearCuenta::CrearCuenta(QGraphicsScene* escena, QGraphicsView* vista){
         "font-weight: bold;"
         "padding-left: 50px; }"
     });
-    txtNombre->raise();
     txtNombre->show();
 
     txtPassword=new QLineEdit(vista);
-    txtPassword->setGeometry(250, 320, 280, 50);
+    txtPassword->setGeometry(250, 335, 280, 50);
     txtPassword->setEchoMode(QLineEdit::Password);
     txtPassword->setStyleSheet({
         "QLineEdit {"
@@ -39,55 +35,54 @@ CrearCuenta::CrearCuenta(QGraphicsScene* escena, QGraphicsView* vista){
         "font-weight: bold;"
         "padding-left: 50px; }"
     });
-    txtPassword->raise();
     txtPassword->show();
 
-    btnCrear=new QPushButton(vista);
-    btnCrear->setGeometry(255,382,310,55);
-    btnCrear->setStyleSheet({
-       "QPushButton {"
-       "background-color: transparent;"
-       "border:none;"
-       "color:transparent; }"
+    btnIniciar=new QPushButton(vista);
+    btnIniciar->setGeometry(255,400,315,55);
+    btnIniciar->setStyleSheet({
+        "QPushButton {"
+        "background-color: transparent;"
+        "border:none;"
+        "color:transparent; }"
     });
-    btnCrear->raise();
-    btnCrear->show();
-    connect(btnCrear,&QPushButton::clicked,this,[this, vista, escena]{
+    btnIniciar->show();
+    connect(btnIniciar, &QPushButton::clicked,this,[this, escena, vista](){
         string nombre=txtNombre->text().toStdString();
         string password=txtPassword->text().toStdString();
 
         if(nombre.empty() || password.empty()){
             MessageBox(NULL,TEXT("NO PUEDE HABER PARAMETROS VACIOS"),TEXT("ERROR"),MB_OK);
-        }else if(manager.crearCuenta(nombre, password)){
-
+        }else if(manager.iniciarSesion(nombre,password)){
+            qDebug("d");
         }
     });
 
     btnRegresar=new QPushButton(vista);
-    btnRegresar->setGeometry(290,452,245,45);
+    btnRegresar->setGeometry(290,467,245,45);
     btnRegresar->setStyleSheet({
-       "QPushButton {"
-       "background-color: transparent;"
-       "border:none }"
+        "QPushButton {"
+        "background-color: transparent;"
+        "border:none;"
+        "color:transparent; }"
     });
-    btnRegresar->raise();
     btnRegresar->show();
-    connect(btnRegresar,&QPushButton::clicked,this,[this, vista, escena]{
-        btnRegresar->hide();
-        btnCrear->hide();
-        btnMostrar->hide();
-        txtPassword->hide();
+    connect(btnRegresar,&QPushButton::clicked,this,[this, escena, vista](){
         txtNombre->hide();
+        txtPassword->hide();
+        btnIniciar->hide();
+        btnRegresar->hide();
+        btnMostrar->hide();
+        escena->clear();
         vista->removeEventFilter(this);
-        menu=new MenuInicio(escena,vista);
+        menu=new MenuInicio(escena, vista);
     });
 
     btnMostrar=new QPushButton(vista);
-    btnMostrar->setGeometry(530,332,35,30);
+    btnMostrar->setGeometry(530,345,35,30);
     btnMostrar->setStyleSheet({
-       "QPushButton {"
-       "background-color: transparent;"
-       "border: none; }"
+        "QPushButton {"
+        "background-color: transparent;"
+        "border: none; }"
     });
     btnMostrar->setIcon(QIcon(":/imagenes/ojo2.png"));
     btnMostrar->setIconSize(QSize(35,30));
@@ -105,4 +100,3 @@ CrearCuenta::CrearCuenta(QGraphicsScene* escena, QGraphicsView* vista){
 
     vista->show();
 }
-

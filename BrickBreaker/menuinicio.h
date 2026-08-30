@@ -12,6 +12,7 @@
 #include <QPushButton>
 
 class CrearCuenta;
+class IniciarSesion;
 
 class MenuInicio:public QObject
 {
@@ -25,6 +26,7 @@ private:
     QGraphicsScene* escena;
     QGraphicsView* vista;
     CrearCuenta* crear;
+    IniciarSesion* iniciar;
     QPushButton* btnInicio;
     QPushButton* btnCrear;
     QPushButton* btnSalir;

@@ -1,5 +1,6 @@
 #include "menuinicio.h"
 #include "crearcuenta.h"
+#include "iniciarsesion.h"
 
 #include <QPixmap>
 #include <QGraphicsPixmapItem>
@@ -39,8 +40,8 @@ void MenuInicio::mostrarMenu(){
     btnCrear->setStyleSheet(
         "QPushButton {"
         "background-color: transparent;"
-        "border: none;"
-        "}");
+        "border: none; }"
+        );
     connect(btnCrear,&QPushButton::clicked,this,[this](){
         btnCrear->hide();
         btnInicio->hide();
@@ -53,25 +54,28 @@ void MenuInicio::mostrarMenu(){
 
     btnInicio=new QPushButton(vista);
     btnInicio->setGeometry(250, 350, 320, 60);
-    btnInicio->setStyleSheet("QPushButton {"
-                             "background-color: transparent;"
-                             "border: none;"
-                             "}");
+    btnInicio->setStyleSheet(
+        "QPushButton {"
+        "background-color: transparent;"
+        "border: none; }"
+        );
     connect(btnInicio,&QPushButton::clicked,this,[this](){
         btnCrear->hide();
         btnInicio->hide();
         btnSalir->hide();
         escena->clear();
         vista->removeEventFilter(this);
+        iniciar=new IniciarSesion(escena, vista);
     });
     btnInicio->show();
 
     btnSalir=new QPushButton(vista);
     btnSalir->setGeometry(250, 430, 320, 60);
-    btnSalir->setStyleSheet("QPushButton {"
-                            "background-color: transparent;"
-                            "border: none;"
-                            "}");
+    btnSalir->setStyleSheet(
+        "QPushButton {"
+        "background-color: transparent;"
+        "border: none; }"
+        );
     connect(btnSalir,&QPushButton::clicked,qApp,&QApplication::quit);
     btnSalir->show();
 }
