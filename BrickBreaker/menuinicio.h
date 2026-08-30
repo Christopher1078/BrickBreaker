@@ -9,8 +9,9 @@
 #include <QEvent>
 #include <QColor>
 #include <qgraphicsitem.h>
+#include <QPushButton>
 
-#include "juego.h"
+#include "crearcuenta.h"
 
 class MenuInicio:public QObject
 {
@@ -20,10 +21,10 @@ public:
 private:
     QGraphicsScene* escena;
     QGraphicsView* vista;
-    Juego* juego;
-
-protected:
-    bool eventFilter(QObject* objeto, QEvent* evento) override;
+    CrearCuenta* crear;
+    QPushButton* btnInicio;
+    QPushButton* btnCrear;
+    QPushButton* btnSalir;
 };
 
 #endif // MENUINICIO_H

@@ -19,6 +19,15 @@ add_executable(BrickBreaker
     Bloque.cpp
     Bloque.h
     menuinicio.h menuinicio.cpp
+    Recursos.qrc
+    crearcuenta.h crearcuenta.cpp
+)
+
+qt_add_resources(BrickBreaker "recursos"
+    PREFIX "/"
+    FILES
+        imagenes/menu.png
+	imagenes/crearcuenta.png
 )
 
 target_link_libraries(BrickBreaker
