@@ -13,6 +13,7 @@
 #include "usermanager.h"
 
 class MenuInicio;
+class MenuPrincipal;
 
 using namespace std;
 
@@ -27,8 +28,9 @@ private:
     QPushButton* btnIniciar;
     QPushButton* btnRegresar;
     QPushButton* btnMostrar;
-    UserManager manager;
+    UserManager* manager;
     MenuInicio* menu;
+    MenuPrincipal* menuPrincipal;
 };
 
 #endif // INICIARSESION_H

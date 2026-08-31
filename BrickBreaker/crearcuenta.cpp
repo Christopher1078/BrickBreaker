@@ -1,10 +1,13 @@
 #include "crearcuenta.h"
 #include "menuinicio.h"
+#include "menuprincipal.h"
 
 #include <QEvent>
 #include <QKeyEvent>
 
 CrearCuenta::CrearCuenta(QGraphicsScene* escena, QGraphicsView* vista){
+    manager=new UserManager;
+
     QPixmap fondo (":/imagenes/crearcuenta.png");
     fondo=fondo.scaled(800,600,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
     QGraphicsPixmapItem* imagen=escena->addPixmap(fondo);
@@ -58,8 +61,15 @@ CrearCuenta::CrearCuenta(QGraphicsScene* escena, QGraphicsView* vista){
 
         if(nombre.empty() || password.empty()){
             MessageBox(NULL,TEXT("NO PUEDE HABER PARAMETROS VACIOS"),TEXT("ERROR"),MB_OK);
-        }else if(manager.crearCuenta(nombre, password)){
-
+        }else if(manager->crearCuenta(nombre, password)){
+            txtNombre->hide();
+            txtPassword->hide();
+            btnCrear->hide();
+            btnRegresar->hide();
+            btnMostrar->hide();
+            escena->clear();
+            vista->removeEventFilter(this);
+            menuPrincipal=new MenuPrincipal(escena, vista, manager);
         }
     });
 

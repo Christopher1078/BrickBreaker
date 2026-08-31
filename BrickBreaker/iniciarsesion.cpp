@@ -1,7 +1,10 @@
 #include "iniciarsesion.h"
 #include "menuinicio.h"
+#include "menuprincipal.h"
 
 IniciarSesion::IniciarSesion(QGraphicsScene *escena, QGraphicsView *vista) {
+    manager=new UserManager;
+
     QPixmap fondo(":/imagenes/iniciarsesion.png");
     fondo=fondo.scaled(800, 600, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
     QGraphicsPixmapItem* imagen=escena->addPixmap(fondo);
@@ -52,8 +55,15 @@ IniciarSesion::IniciarSesion(QGraphicsScene *escena, QGraphicsView *vista) {
 
         if(nombre.empty() || password.empty()){
             MessageBox(NULL,TEXT("NO PUEDE HABER PARAMETROS VACIOS"),TEXT("ERROR"),MB_OK);
-        }else if(manager.iniciarSesion(nombre,password)){
-            qDebug("d");
+        }else if(manager->iniciarSesion(nombre,password)){
+            txtNombre->hide();
+            txtPassword->hide();
+            btnIniciar->hide();
+            btnRegresar->hide();
+            btnMostrar->hide();
+            escena->clear();
+            vista->removeEventFilter(this);
+            menuPrincipal=new MenuPrincipal(escena,vista,manager);
         }
     });
 

@@ -2,6 +2,7 @@
 
 #include <filesystem>
 #include <fstream>
+#include <iostream>
 #include <qlogging.h>
 
 UserManager::UserManager() {
@@ -98,5 +99,9 @@ string UserManager::convertirAMinusculas(string textoOriginal){
         resultado[i]=static_cast<char>(tolower(static_cast<unsigned char>(resultado[i])));
     }
     return resultado;
+}
+
+void UserManager::cerrarSesion(){
+    actual=nullptr;
 }
 

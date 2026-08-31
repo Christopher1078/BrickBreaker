@@ -12,10 +12,11 @@ public:
     bool iniciarSesion(string nombre, string password);
     bool crearCuenta(string nombre, string password);
     void guardarArreglo(Usuario* usuarios[]);
-    Usuario getActual();
+    Usuario* getActual();
     int buscarUsuario(string nombre);
     void inicializarArreglo();
     string convertirAMinusculas(string textoOriginal);
+    void cerrarSesion();
 private:
     Usuario* actual;
     Usuario* usuarios[100];
