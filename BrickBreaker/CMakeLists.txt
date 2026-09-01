@@ -25,6 +25,7 @@ add_executable(BrickBreaker
     usermanager.h usermanager.cpp
     iniciarsesion.h iniciarsesion.cpp
     menuprincipal.h menuprincipal.cpp
+    menuniveles.h menuniveles.cpp
 )
 
 qt_add_resources(BrickBreaker "recursos"
@@ -36,6 +37,7 @@ qt_add_resources(BrickBreaker "recursos"
 	imagenes/ojo2.png
 	imagenes/iniciarsesion.png
 	imagenes/menuprincipal.png
+	imagenes/menuniveles.png
 )
 
 target_link_libraries(BrickBreaker

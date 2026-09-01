@@ -1,5 +1,6 @@
 #include "menuprincipal.h"
 #include "menuinicio.h"
+#include "menuniveles.h"
 
 MenuPrincipal::MenuPrincipal(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manager) {
     QPixmap fondo(":/imagenes/menuprincipal.png");
@@ -17,8 +18,14 @@ MenuPrincipal::MenuPrincipal(QGraphicsScene* escena, QGraphicsView* vista, UserM
         "border: none; }"
     });
     btnJugar->show();
-    connect(btnJugar,&QPushButton::clicked,this,[this](){
-
+    connect(btnJugar,&QPushButton::clicked,this,[this, escena, vista, manager](){
+        btnJugar->hide();
+        btnInstrucciones->hide();
+        btnRecords->hide();
+        btnCerrar->hide();
+        escena->clear();
+        vista->removeEventFilter(this);
+        menuNiveles=new MenuNiveles(escena,vista,manager);
     });
 
     btnInstrucciones=new QPushButton(vista);

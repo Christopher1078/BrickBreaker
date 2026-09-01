@@ -14,6 +14,7 @@
 #include "usermanager.h"
 
 class MenuInicio;
+class MenuNiveles;
 
 class MenuPrincipal: public QObject
 {
@@ -27,6 +28,7 @@ private:
     QPushButton* btnRecords;
     QPushButton* btnCerrar;
     MenuInicio* menuInicio;
+    MenuNiveles* menuNiveles;
 };
 
 #endif // MENUPRINCIPAL_H
