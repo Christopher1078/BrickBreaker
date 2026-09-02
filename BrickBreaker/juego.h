@@ -8,6 +8,7 @@
 #include <QKeyEvent>
 #include <QEvent>
 #include <QColor>
+#include <qgraphicsitem.h>
 
 #include "pelota.h"
 #include "paleta.h"
@@ -32,6 +33,7 @@ private:
 
 public:
     Juego(QGraphicsScene* escena, QGraphicsView* vista);
+    ~Juego();
 
     void actualizar();
 

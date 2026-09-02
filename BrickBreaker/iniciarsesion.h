@@ -22,6 +22,7 @@ class IniciarSesion: public QObject
     Q_OBJECT
 public:
     IniciarSesion(QGraphicsScene* escena, QGraphicsView* vista);
+    ~IniciarSesion();
 private:
     QLineEdit* txtNombre;
     QLineEdit* txtPassword;

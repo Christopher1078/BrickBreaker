@@ -5,6 +5,12 @@ Juego::Juego(QGraphicsScene* escena, QGraphicsView* vista)
     this->escena=escena;
     this->vista=vista;
 
+    QPixmap fondo(":/imagenes/fondo.png");
+    fondo=fondo.scaled(800,600,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
+    QGraphicsPixmapItem* imagen=escena->addPixmap(fondo);
+    imagen->setZValue(-1);
+    imagen->setPos(0,0);
+
     escena->setSceneRect(0, 0, 800, 600);
     escena->setBackgroundBrush(QColor(10, 10, 20));
 
@@ -95,4 +101,9 @@ bool Juego::eventFilter(QObject* objeto, QEvent* evento)
     }
 
     return QObject::eventFilter(objeto, evento);
+}
+
+Juego::~Juego(){
+    delete pelota;
+    delete paleta;
 }

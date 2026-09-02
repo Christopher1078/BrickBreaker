@@ -20,6 +20,7 @@ class MenuInicio:public QObject
 public:
     MenuInicio(QGraphicsScene* escena, QGraphicsView* vista);
     MenuInicio();
+    ~MenuInicio();
     void mostrarMenu();
 
 private:

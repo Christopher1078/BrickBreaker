@@ -21,6 +21,7 @@ class MenuNiveles: public QObject
     Q_OBJECT
 public:
     MenuNiveles(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manager);
+    ~MenuNiveles();
 private:
     QPushButton* btnNivel1;
     QPushButton* btnNivel2;

@@ -22,6 +22,7 @@ class CrearCuenta: public QObject
     Q_OBJECT
 public:
     CrearCuenta(QGraphicsScene* escena, QGraphicsView* vista);
+    ~CrearCuenta();
 private:
     QLineEdit* txtNombre;
     QLineEdit* txtPassword;

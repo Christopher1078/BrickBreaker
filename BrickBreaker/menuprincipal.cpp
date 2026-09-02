@@ -73,3 +73,10 @@ MenuPrincipal::MenuPrincipal(QGraphicsScene* escena, QGraphicsView* vista, UserM
 
     vista->show();
 }
+
+MenuPrincipal::~MenuPrincipal(){
+    delete btnJugar;
+    delete btnInstrucciones;
+    delete btnRecords;
+    delete btnCerrar;
+}

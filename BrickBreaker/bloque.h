@@ -14,6 +14,7 @@ private:
 
 public:
     Bloque(float x, float y, QColor color);
+    ~Bloque();
 
     QGraphicsRectItem* getGrafico();
 

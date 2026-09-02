@@ -12,6 +12,11 @@ Bloque::Bloque(float x, float y, QColor color)
 
     destruido = false;
 }
+
+Bloque::~Bloque(){
+    delete grafico;
+}
+
 QGraphicsRectItem* Bloque::getGrafico()
 {
     return grafico;

@@ -1,22 +1,22 @@
 #ifndef PELOTA_H
 #define PELOTA_H
 
-#include <QGraphicsEllipseItem>
-#include <QBrush>
-#include <QPen>
+#include <QGraphicsPixmapItem>
+#include <QPixmap>
 
 class Pelota
 {
 private:
-    QGraphicsEllipseItem* grafico;
+    QGraphicsPixmapItem* grafico;
 
     float velocidadX;
     float velocidadY;
 
 public:
     Pelota();
+    ~Pelota();
 
-    QGraphicsEllipseItem* getGrafico();
+    QGraphicsPixmapItem* getGrafico();
 
     void mover();
     void comprobarParedes();

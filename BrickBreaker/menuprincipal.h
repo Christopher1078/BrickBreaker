@@ -21,7 +21,7 @@ class MenuPrincipal: public QObject
     Q_OBJECT
 public:
     MenuPrincipal(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manager);
-
+    ~MenuPrincipal();
 private:
     QPushButton* btnJugar;
     QPushButton* btnInstrucciones;

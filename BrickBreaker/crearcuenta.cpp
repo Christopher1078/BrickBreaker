@@ -116,3 +116,11 @@ CrearCuenta::CrearCuenta(QGraphicsScene* escena, QGraphicsView* vista){
     vista->show();
 }
 
+CrearCuenta::~CrearCuenta(){
+    delete txtNombre;
+    delete txtPassword;
+    delete btnCrear;
+    delete btnRegresar;
+    delete btnMostrar;
+}
+

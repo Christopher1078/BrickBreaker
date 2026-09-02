@@ -80,5 +80,11 @@ void MenuInicio::mostrarMenu(){
     btnSalir->show();
 }
 
+MenuInicio::~MenuInicio(){
+    delete btnCrear;
+    delete btnInicio;
+    delete btnSalir;
+}
+
 
 

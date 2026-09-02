@@ -100,3 +100,12 @@ MenuNiveles::MenuNiveles(QGraphicsScene* escena, QGraphicsView* vista, UserManag
 
     vista->show();
 }
+
+MenuNiveles::~MenuNiveles(){
+    delete btnNivel1;
+    delete btnNivel2;
+    delete btnNivel3;
+    delete btnNivel4;
+    delete btnNivel5;
+    delete btnRegresar;
+}

@@ -9,6 +9,7 @@ class UserManager
 {
 public:
     UserManager();
+    ~UserManager();
     bool iniciarSesion(string nombre, string password);
     bool crearCuenta(string nombre, string password);
     void guardarArreglo(Usuario* usuarios[]);

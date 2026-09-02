@@ -118,3 +118,11 @@ void UserManager::cerrarSesion(){
     actual=nullptr;
 }
 
+UserManager::~UserManager(){
+    delete actual;
+    for (int i = 0; i < cantidad; ++i) {
+        delete usuarios[i];
+    }
+
+}
+

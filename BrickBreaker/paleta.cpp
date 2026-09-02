@@ -2,13 +2,14 @@
 
 Paleta::Paleta()
 {
-    grafico = new QGraphicsRectItem(0, 0, 100, 20);
-    grafico->setPos(350, 550);
-    grafico->setBrush(QBrush(QColor(40, 220, 255)));
-    grafico->setPen(QPen(QColor(180, 250, 255), 2));
+    QPixmap imagen(":/imagenes/paleta.png");
+    imagen=imagen.scaled(180,45,Qt::IgnoreAspectRatio,Qt::FastTransformation);
+    grafico = new QGraphicsPixmapItem(imagen);
+    grafico->setPos(350, 530);
+
 }
 
-QGraphicsRectItem* Paleta::getGrafico(){
+QGraphicsPixmapItem* Paleta::getGrafico(){
     return grafico;
 }
 
@@ -19,7 +20,11 @@ void Paleta::moverIzquierda(){
 }
 
 void Paleta::moverDerecha(){
-    if (grafico->x() + grafico->rect().width() < 800){
+    if (grafico->x() + grafico->boundingRect().width() < 800){
         grafico->moveBy(20, 0);
     }
+}
+
+Paleta::~Paleta(){
+    delete grafico;
 }

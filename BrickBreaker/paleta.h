@@ -1,19 +1,19 @@
 #ifndef PALETA_H
 #define PALETA_H
 
-#include <QGraphicsRectItem>
-#include <QBrush>
-#include <QPen>
+#include <QGraphicsPixmapItem>
+#include <QPixmap>
 
 class Paleta
 {
 private:
-    QGraphicsRectItem* grafico;
+    QGraphicsPixmapItem* grafico;
 
 public:
     Paleta();
+    ~Paleta();
 
-    QGraphicsRectItem* getGrafico();
+    QGraphicsPixmapItem* getGrafico();
 
     void moverIzquierda();
     void moverDerecha();

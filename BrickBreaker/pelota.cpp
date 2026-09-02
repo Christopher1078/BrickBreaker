@@ -2,16 +2,16 @@
 
 Pelota::Pelota()
 {
-    grafico = new QGraphicsEllipseItem(0, 0, 20, 20);
-    grafico->setBrush(QBrush(Qt::white));
-    grafico->setPen(QPen(QColor(180, 220, 255), 2));
+    QPixmap imagen(":/imagenes/pelota.png");
+    imagen=imagen.scaled(20,20,Qt::IgnoreAspectRatio,Qt::FastTransformation);
+    grafico = new QGraphicsPixmapItem(imagen);
     grafico->setPos(390, 500);
 
     velocidadX = 4;
     velocidadY = -4;
 }
 
-QGraphicsEllipseItem* Pelota::getGrafico()
+QGraphicsPixmapItem* Pelota::getGrafico()
 {
     return grafico;
 }
@@ -68,4 +68,8 @@ bool Pelota::colisionaCon(QGraphicsItem* objeto)
 bool Pelota::estaBajando()
 {
     return velocidadY > 0;
+}
+
+Pelota::~Pelota(){
+    delete grafico;
 }

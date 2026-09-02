@@ -110,3 +110,11 @@ IniciarSesion::IniciarSesion(QGraphicsScene *escena, QGraphicsView *vista) {
 
     vista->show();
 }
+
+IniciarSesion::~IniciarSesion(){
+    delete txtNombre;
+    delete txtPassword;
+    delete btnIniciar;
+    delete btnMostrar;
+    delete btnRegresar;
+}
