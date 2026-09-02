@@ -1,6 +1,7 @@
 #include "menuniveles.h"
 #include "juego.h"
 #include "menuprincipal.h"
+#include "nivel2.h"
 
 MenuNiveles::MenuNiveles(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manager) {
     QPixmap fondo(":/imagenes/menuniveles.png");
@@ -38,9 +39,29 @@ MenuNiveles::MenuNiveles(QGraphicsScene* escena, QGraphicsView* vista, UserManag
         "border: none; }"
     });*/
     btnNivel2->show();
-    connect(btnNivel2,&QPushButton::clicked,this,[this](){
+    connect(
+        btnNivel2,
+        &QPushButton::clicked,
+        this,
+        [this, escena, vista]()
+        {
+            btnNivel1->hide();
+            btnNivel2->hide();
+            btnNivel3->hide();
+            btnNivel4->hide();
+            btnNivel5->hide();
+            btnRegresar->hide();
 
-    });
+            escena->clear();
+
+            vista->removeEventFilter(this);
+
+            nivel2 = new Nivel2(
+                escena,
+                vista
+                );
+        }
+        );
 
     btnNivel3=new QPushButton(vista);
     btnNivel3->setGeometry(350,250,132,155);

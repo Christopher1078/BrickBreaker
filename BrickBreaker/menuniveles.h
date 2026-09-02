@@ -15,6 +15,7 @@
 
 class MenuPrincipal;
 class Juego;
+class Nivel2;
 
 class MenuNiveles: public QObject
 {
@@ -31,6 +32,7 @@ private:
     QPushButton* btnRegresar;
     MenuPrincipal* menuPrincipal;
     Juego* juego;
+     Nivel2* nivel2;
 };
 
 #endif // MENUNIVELES_H
