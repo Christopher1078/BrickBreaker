@@ -11,7 +11,7 @@ public:
     Usuario(string nombre, string password);
     string getNombre();
     string getPassword();
-    void pasarNivel(int nivel);
+    void pasarNivel();
     int getUltimoNivel();
     bool isPasado(int nivel);
 private:

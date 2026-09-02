@@ -54,13 +54,15 @@ void UserManager::guardarArreglo(Usuario* usuarios[]){
             continue;
         }
         archivo << usuarios[i]->getNombre() << DELIMITADOR
-                << usuarios[i]->getPassword() << "\n";
+                << usuarios[i]->getPassword() << DELIMITADOR
+                << usuarios[i]->getUltimoNivel() << "\n";
         archivo.close();
     }
 }
 
 void UserManager::inicializarArreglo(){
     for(const auto& entrada: filesystem::directory_iterator("Usuarios")){
+        int nivel;
         Usuario* usuario;
         filesystem::path ruta=entrada.path()/"usuario.txt";
         ifstream archivo (ruta);
@@ -70,13 +72,24 @@ void UserManager::inicializarArreglo(){
         string linea;
         getline(archivo,linea);
         size_t p1=linea.find(DELIMITADOR);
-        if(p1==string::npos){
+        size_t p2=linea.find(DELIMITADOR,p1+1);
+        if(p1==string::npos || p1==string::npos){
             continue;
         }
 
         string nombre=linea.substr(0,p1);
-        string password=linea.substr(p1+1);
+        string password=linea.substr(p1+1,p2-(p1+1));
+        string nivelTxt=linea.substr(p2+1);
+        try {
+            nivel=stoi(nivelTxt);
+        } catch (...) {
+            continue;
+        }
+
         usuario=new Usuario{nombre,password};
+        for(int i=0;i<nivel;i++){
+            usuario->pasarNivel();
+        }
         usuarios[cantidad]=usuario;
         cantidad++;
         archivo.close();

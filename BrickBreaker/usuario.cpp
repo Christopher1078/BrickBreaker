@@ -17,7 +17,7 @@ string Usuario::getPassword(){
     return password;
 }
 
-void Usuario::pasarNivel(int nivel){
+void Usuario::pasarNivel(){
     int siguiente=getUltimoNivel()+1;
     if(siguiente>=5){
         return;

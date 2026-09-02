@@ -38,6 +38,13 @@ qt_add_resources(BrickBreaker "recursos"
 	imagenes/iniciarsesion.png
 	imagenes/menuprincipal.png
 	imagenes/menuniveles.png
+	imagenes/bloque_naranja.png
+	imagenes/bloque_verde.png
+	imagenes/bloque_azul.png
+	imagenes/pelota.png
+	imagenes/paleta.png
+	imagenes/bloque_rojo.png
+	imagenes/fondo.png
 )
 
 target_link_libraries(BrickBreaker
