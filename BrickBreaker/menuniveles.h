@@ -16,6 +16,7 @@
 class MenuPrincipal;
 class Juego;
 class Nivel2;
+class Nivel3;
 
 class MenuNiveles: public QObject
 {
@@ -33,6 +34,7 @@ private:
     MenuPrincipal* menuPrincipal;
     Juego* juego;
      Nivel2* nivel2;
+    Nivel3* nivel3;
 };
 
 #endif // MENUNIVELES_H

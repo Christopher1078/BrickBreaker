@@ -28,6 +28,9 @@ add_executable(BrickBreaker
     menuniveles.h menuniveles.cpp
     Nivel2.h
     Nivel2.cpp
+    Nivel3.h
+    Nivel3.h
+    Nivel3.cpp
 )
 
 qt_add_resources(BrickBreaker "recursos"
