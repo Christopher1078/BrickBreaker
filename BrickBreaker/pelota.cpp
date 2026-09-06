@@ -16,6 +16,45 @@ QGraphicsPixmapItem* Pelota::getGrafico()
     return grafico;
 }
 
+void Pelota::reflejar(QVector2D normal){
+    QVector2D velocidad(velocidadX, velocidadY);
+    normal.normalize();
+    velocidad=velocidad-2*QVector2D::dotProduct(velocidad,normal)*normal;
+
+    velocidadX=velocidad.x();
+    velocidadY=velocidad.y();
+}
+
+void Pelota::rebotarBloque(QGraphicsItem* bloque){
+    QRectF pelotaRect = grafico->sceneBoundingRect();
+    QRectF bloqueRect = bloque->sceneBoundingRect();
+
+    float distanciaIzquierda=pelotaRect.right()-bloqueRect.left();
+    float distanciaDerecha=bloqueRect.right()-pelotaRect.left();
+    float distanciaArriba=pelotaRect.bottom()-bloqueRect.top();
+    float distanciaAbajo=bloqueRect.bottom()-pelotaRect.top();
+    float menorHorizontal=std::min(distanciaIzquierda, distanciaDerecha);
+    float menorVertical=std::min(distanciaArriba, distanciaAbajo);
+
+    if(menorHorizontal<menorVertical){
+        velocidadX=-velocidadX;
+    }else{
+        velocidadY=-velocidadY;
+    }
+}
+
+void Pelota::rebotarPaleta(float porcentaje){
+    if(porcentaje<-1){
+        porcentaje = -1;
+    }
+    if(porcentaje>1){
+        porcentaje=1;
+    }
+
+    velocidadX=porcentaje*6;
+    velocidadY=-6;
+}
+
 void Pelota::mover()
 {
     grafico->moveBy(velocidadX, velocidadY);
@@ -23,36 +62,30 @@ void Pelota::mover()
 
 void Pelota::comprobarParedes()
 {
-    QRectF limites = grafico->sceneBoundingRect();
 
-    if (limites.left() <= 0)
+    if (grafico->x() <= 20)
     {
-        grafico->setX(0);
-        rebotarHorizontal();
+        reflejar(QVector2D(1,0));
     }
 
-    if (limites.right() >= 800)
+    if (grafico->x() >= 770)
     {
-        grafico->setX(780);
-        rebotarHorizontal();
+        reflejar(QVector2D(-1,0));
     }
 
-    if (limites.top() <= 0)
+    if (grafico->y()<= 20)
     {
-        grafico->setY(0);
-        rebotarVertical();
+        reflejar(QVector2D(0,1));
     }
 
-    if (limites.bottom() >= 600)
+    if (grafico->y() >= 590)
     {
-        grafico->setY(580);
-        rebotarVertical();
+        reflejar(QVector2D(0,-1));
     }
-}
 
-void Pelota::rebotarHorizontal()
-{
-    velocidadX = -velocidadX;
+    if(grafico->x() > 770){
+        grafico->setX(770);
+    }
 }
 
 void Pelota::rebotarVertical()
@@ -68,6 +101,11 @@ bool Pelota::colisionaCon(QGraphicsItem* objeto)
 bool Pelota::estaBajando()
 {
     return velocidadY > 0;
+}
+
+void Pelota::reiniciarMovimiento(){
+    velocidadX=4;
+    velocidadY=-4;
 }
 
 Pelota::~Pelota(){

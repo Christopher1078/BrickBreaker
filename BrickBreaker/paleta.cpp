@@ -14,15 +14,19 @@ QGraphicsPixmapItem* Paleta::getGrafico(){
 }
 
 void Paleta::moverIzquierda(){
-    if (grafico->x() > 0){
+    if (grafico->x() > 20){
         grafico->moveBy(-20, 0);
     }
 }
 
 void Paleta::moverDerecha(){
-    if (grafico->x() + grafico->boundingRect().width() < 800){
+    if (grafico->x() + grafico->boundingRect().width() < 790){
         grafico->moveBy(20, 0);
     }
+}
+
+void Paleta::reiniciar(){
+    grafico->setPos(350,530);
 }
 
 Paleta::~Paleta(){

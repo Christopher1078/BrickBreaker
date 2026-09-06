@@ -47,12 +47,6 @@ CrearCuenta::CrearCuenta(QGraphicsScene* escena, QGraphicsView* vista){
 
     btnCrear=new QPushButton(vista);
     btnCrear->setGeometry(255,382,310,55);
-    btnCrear->setStyleSheet({
-       "QPushButton {"
-       "background-color: transparent;"
-       "border:none;"
-       "color:transparent; }"
-    });
     btnCrear->raise();
     btnCrear->show();
     connect(btnCrear,&QPushButton::clicked,this,[this, vista, escena]{
@@ -75,11 +69,6 @@ CrearCuenta::CrearCuenta(QGraphicsScene* escena, QGraphicsView* vista){
 
     btnRegresar=new QPushButton(vista);
     btnRegresar->setGeometry(290,452,245,45);
-    btnRegresar->setStyleSheet({
-       "QPushButton {"
-       "background-color: transparent;"
-       "border:none }"
-    });
     btnRegresar->raise();
     btnRegresar->show();
     connect(btnRegresar,&QPushButton::clicked,this,[this, vista, escena]{
@@ -94,11 +83,6 @@ CrearCuenta::CrearCuenta(QGraphicsScene* escena, QGraphicsView* vista){
 
     btnMostrar=new QPushButton(vista);
     btnMostrar->setGeometry(530,332,35,30);
-    btnMostrar->setStyleSheet({
-       "QPushButton {"
-       "background-color: transparent;"
-       "border: none; }"
-    });
     btnMostrar->setIcon(QIcon(":/imagenes/ojo2.png"));
     btnMostrar->setIconSize(QSize(35,30));
     btnMostrar->raise();

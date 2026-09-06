@@ -28,26 +28,20 @@ IniciarSesion::IniciarSesion(QGraphicsScene *escena, QGraphicsView *vista) {
     txtPassword=new QLineEdit(vista);
     txtPassword->setGeometry(250, 335, 280, 50);
     txtPassword->setEchoMode(QLineEdit::Password);
-    txtPassword->setStyleSheet({
-        "QLineEdit {"
-        "background-color: transparent;"
-        "border:none;"
-        "color: white;"
-        "font-family:'Courier New';"
-        "font-size: 18px;"
-        "font-weight: bold;"
-        "padding-left: 50px; }"
-    });
+        txtPassword->setStyleSheet({
+            "QLineEdit {"
+            "background-color: transparent;"
+            "border:none;"
+            "color: white;"
+            "font-family:'Courier New';"
+            "font-size: 18px;"
+            "font-weight: bold;"
+            "padding-left: 50px; }"
+        });
     txtPassword->show();
 
     btnIniciar=new QPushButton(vista);
     btnIniciar->setGeometry(255,400,315,55);
-    btnIniciar->setStyleSheet({
-        "QPushButton {"
-        "background-color: transparent;"
-        "border:none;"
-        "color:transparent; }"
-    });
     btnIniciar->show();
     connect(btnIniciar, &QPushButton::clicked,this,[this, escena, vista](){
         string nombre=txtNombre->text().toStdString();
@@ -69,12 +63,6 @@ IniciarSesion::IniciarSesion(QGraphicsScene *escena, QGraphicsView *vista) {
 
     btnRegresar=new QPushButton(vista);
     btnRegresar->setGeometry(290,467,245,45);
-    btnRegresar->setStyleSheet({
-        "QPushButton {"
-        "background-color: transparent;"
-        "border:none;"
-        "color:transparent; }"
-    });
     btnRegresar->show();
     connect(btnRegresar,&QPushButton::clicked,this,[this, escena, vista](){
         txtNombre->hide();
@@ -89,11 +77,6 @@ IniciarSesion::IniciarSesion(QGraphicsScene *escena, QGraphicsView *vista) {
 
     btnMostrar=new QPushButton(vista);
     btnMostrar->setGeometry(530,345,35,30);
-    btnMostrar->setStyleSheet({
-        "QPushButton {"
-        "background-color: transparent;"
-        "border: none; }"
-    });
     btnMostrar->setIcon(QIcon(":/imagenes/ojo2.png"));
     btnMostrar->setIconSize(QSize(35,30));
     btnMostrar->raise();

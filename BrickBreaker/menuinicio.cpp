@@ -37,11 +37,6 @@ void MenuInicio::mostrarMenu(){
 
     btnCrear=new QPushButton(vista);
     btnCrear->setGeometry(250, 270, 320, 60);
-    btnCrear->setStyleSheet(
-        "QPushButton {"
-        "background-color: transparent;"
-        "border: none; }"
-        );
     connect(btnCrear,&QPushButton::clicked,this,[this](){
         btnCrear->hide();
         btnInicio->hide();
@@ -54,11 +49,6 @@ void MenuInicio::mostrarMenu(){
 
     btnInicio=new QPushButton(vista);
     btnInicio->setGeometry(250, 350, 320, 60);
-    btnInicio->setStyleSheet(
-        "QPushButton {"
-        "background-color: transparent;"
-        "border: none; }"
-        );
     connect(btnInicio,&QPushButton::clicked,this,[this](){
         btnCrear->hide();
         btnInicio->hide();
@@ -71,11 +61,6 @@ void MenuInicio::mostrarMenu(){
 
     btnSalir=new QPushButton(vista);
     btnSalir->setGeometry(250, 430, 320, 60);
-    btnSalir->setStyleSheet(
-        "QPushButton {"
-        "background-color: transparent;"
-        "border: none; }"
-        );
     connect(btnSalir,&QPushButton::clicked,qApp,&QApplication::quit);
     btnSalir->show();
 }

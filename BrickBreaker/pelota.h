@@ -3,6 +3,7 @@
 
 #include <QGraphicsPixmapItem>
 #include <QPixmap>
+#include <QVector2D>
 
 class Pelota
 {
@@ -20,10 +21,13 @@ public:
 
     void mover();
     void comprobarParedes();
-    void rebotarHorizontal();
-    void rebotarVertical();
+    void reflejar(QVector2D normal);
     bool colisionaCon(QGraphicsItem* objeto);
+    void rebotarVertical();
     bool estaBajando();
+    void rebotarPaleta(float porcentaje);
+    void rebotarBloque(QGraphicsItem* bloque);
+    void reiniciarMovimiento();
 };
 
 #endif // PELOTA_H

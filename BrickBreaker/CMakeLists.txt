@@ -52,6 +52,7 @@ qt_add_resources(BrickBreaker "recursos"
 	imagenes/paleta.png
 	imagenes/bloque_rojo.png
 	imagenes/fondo.png
+	imagenes/corazon.png
 )
 
 target_link_libraries(BrickBreaker

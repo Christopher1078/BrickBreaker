@@ -1,10 +1,10 @@
 #include "nivel1.h"
 
-Nivel1::Nivel1(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manager):Juego(escena, vista) {
+Nivel1::Nivel1(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manager):Juego(escena, vista, manager) {
     for(int i=0;i<FILAS;i++){
         for(int j=0;j<COLUMNAS;j++){
             float x=j*60+40;
-            float y=i*30+25;
+            float y=i*30+40;
             string ruta;
 
             switch(i){

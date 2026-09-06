@@ -17,6 +17,7 @@ public:
 
     void moverIzquierda();
     void moverDerecha();
+    void reiniciar();
 };
 
 #endif // PALETA_H
