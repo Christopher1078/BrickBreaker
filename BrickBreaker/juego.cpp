@@ -11,8 +11,8 @@ Juego::Juego(QGraphicsScene* escena, QGraphicsView* vista)
     imagen->setZValue(-1);
     imagen->setPos(0,0);
 
-    escena->setSceneRect(0, 0, 800, 600);
-    escena->setBackgroundBrush(QColor(10, 10, 20));
+    /*escena->setSceneRect(0, 0, 800, 600);
+    escena->setBackgroundBrush(QColor(10, 10, 20));*/
 
     vista->installEventFilter(this);
     vista->setFocusPolicy(Qt::StrongFocus);
@@ -21,39 +21,23 @@ Juego::Juego(QGraphicsScene* escena, QGraphicsView* vista)
     pelota = new Pelota();
     paleta = new Paleta();
 
-    for(int i=0;i<FILAS;i++){
-        for(int j=0;j<COLUMNAS;j++){
-            float x=j*90+40;
-            float y=i*35+40;
-
-            QColor color;
-
-            if (i == 0){
-                color = QColor(255, 50, 50);
-            }
-            else if (i == 1){
-                color = QColor(255, 180, 40);
-            }
-            else{
-                color = QColor(50, 150, 255);
-            }
-
-            bloques[i][j]=new Bloque(x,y, color);
-
-            escena->addItem(bloques[i][j]->getGrafico());
-        }
-    }
-
     escena->addItem(pelota->getGrafico());
     escena->addItem(paleta->getGrafico());
 
-    timer = new QTimer();
+    timer=new QTimer;
 
-    QObject::connect(timer, &QTimer::timeout, this, &Juego::actualizar);
+    QObject::connect(timer,&QTimer::timeout,this,&Juego::actualizar);
 
+    bloques=new Bloque*[FILAS];
+    for(int i=0;i<FILAS;i++){
+        bloques[i]=new Bloque[COLUMNAS];
+    }
+}
+
+void Juego::iniciarTimer(){
     timer->start(16);
+    vista->show();
 
-    //vista->show();
 }
 
 void Juego::actualizar()
@@ -68,12 +52,14 @@ void Juego::actualizar()
 
     for(int i=0;i<FILAS;i++){
         for(int j=0;j<COLUMNAS;j++){
-            if(!bloques[i][j]->estaDestruido()){
-                if(pelota->colisionaCon(bloques[i][j]->getGrafico())){
-                    bloques[i][j]->destruir();
-                    escena->removeItem(bloques[i][j]->getGrafico());
-                    pelota->rebotarVertical();
-                    return;
+            if(bloques[i][j].getGrafico()!=nullptr){
+                if(!bloques[i][j].estaDestruido()){
+                    if(pelota->colisionaCon(bloques[i][j].getGrafico())){
+                        bloques[i][j].destruir();
+                        escena->removeItem(bloques[i][j].getGrafico());
+                        pelota->rebotarVertical();
+                        return;
+                    }
                 }
             }
         }
@@ -106,4 +92,6 @@ bool Juego::eventFilter(QObject* objeto, QEvent* evento)
 Juego::~Juego(){
     delete pelota;
     delete paleta;
+    delete timer;
+
 }

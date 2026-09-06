@@ -14,7 +14,7 @@
 #include "usermanager.h"
 
 class MenuPrincipal;
-class Juego;
+class Nivel1;
 class Nivel2;
 class Nivel3;
 
@@ -32,8 +32,8 @@ private:
     QPushButton* btnNivel5;
     QPushButton* btnRegresar;
     MenuPrincipal* menuPrincipal;
-    Juego* juego;
-     Nivel2* nivel2;
+    Nivel1* nivel1;
+    Nivel2* nivel2;
     Nivel3* nivel3;
 };
 

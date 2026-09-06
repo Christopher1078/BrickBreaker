@@ -1,6 +1,6 @@
 #include "usuario.h"
 
-Usuario::Usuario(string nombre, string password) {
+Usuario::Usuario(std::string nombre, std::string password) {
     this->nombre=nombre;
     this->password=password;
     niveles[0]=true;
@@ -9,11 +9,11 @@ Usuario::Usuario(string nombre, string password) {
     }
 }
 
-string Usuario::getNombre(){
+std::string Usuario::getNombre(){
     return nombre;
 }
 
-string Usuario::getPassword(){
+std::string Usuario::getPassword(){
     return password;
 }
 

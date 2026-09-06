@@ -18,27 +18,22 @@ class Juego : public QObject
 {
     Q_OBJECT
 
-private:
-    static const int FILAS=3;
-    static const int COLUMNAS=8;
-
+protected:
+    const int FILAS=5;
+    const int COLUMNAS=12;
     QGraphicsScene* escena;
     QGraphicsView* vista;
     QTimer* timer;
-
     Pelota* pelota;
     Paleta* paleta;
+    Bloque** bloques;
 
-    Bloque* bloques[FILAS][COLUMNAS];
-
+    bool eventFilter(QObject* objeto, QEvent* evento) override;
+    void actualizar();
+    void iniciarTimer();
 public:
     Juego(QGraphicsScene* escena, QGraphicsView* vista);
-    ~Juego();
-
-    void actualizar();
-
-protected:
-    bool eventFilter(QObject* objeto, QEvent* evento) override;
+    virtual ~Juego();
 };
 
 #endif // JUEGO_H

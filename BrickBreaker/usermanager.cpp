@@ -3,19 +3,18 @@
 #include <filesystem>
 #include <fstream>
 #include <iostream>
-#include <qlogging.h>
 
 UserManager::UserManager() {
     actual=nullptr;
     cantidad=0;
-    filesystem::create_directory("Usuarios");
+    std::filesystem::create_directory("Usuarios");
     inicializarArreglo();
     for(int i=cantidad;i<limite;i++){
         usuarios[i]=nullptr;
     }
 }
 
-bool UserManager::crearCuenta(string nombre, string password){
+bool UserManager::crearCuenta(std::string nombre, std::string password){
     if(buscarUsuario(nombre)!=-1){
         MessageBox(NULL,TEXT("YA EXISTE ESE NOMBRE DE USUARIO"),TEXT("ERROR"),MB_OK);
         return false;
@@ -31,7 +30,7 @@ bool UserManager::crearCuenta(string nombre, string password){
     return true;
 }
 
-bool UserManager::iniciarSesion(string nombre, string password){
+bool UserManager::iniciarSesion(std::string nombre, std::string password){
     int indice=buscarUsuario(nombre);
     if(indice==-1){
         MessageBox(NULL,TEXT("NO EXISTE EL USUARIO"), TEXT("ERROR"), MB_OK);
@@ -48,8 +47,8 @@ bool UserManager::iniciarSesion(string nombre, string password){
 
 void UserManager::guardarArreglo(Usuario* usuarios[]){
     for(int i=0;i<cantidad;i++){
-        filesystem::create_directory("Usuarios/"+usuarios[i]->getNombre());
-        ofstream archivo("Usuarios/"+usuarios[i]->getNombre()+"/usuario.txt",ios::trunc);
+        std::filesystem::create_directory("Usuarios/"+usuarios[i]->getNombre());
+        std::ofstream archivo("Usuarios/"+usuarios[i]->getNombre()+"/usuario.txt",std::ios::trunc);
         if(!archivo.is_open()){
             continue;
         }
@@ -61,25 +60,25 @@ void UserManager::guardarArreglo(Usuario* usuarios[]){
 }
 
 void UserManager::inicializarArreglo(){
-    for(const auto& entrada: filesystem::directory_iterator("Usuarios")){
+    for(const auto& entrada: std::filesystem::directory_iterator("Usuarios")){
         int nivel;
         Usuario* usuario;
-        filesystem::path ruta=entrada.path()/"usuario.txt";
-        ifstream archivo (ruta);
+        std::filesystem::path ruta=entrada.path()/"usuario.txt";
+        std::ifstream archivo (ruta);
         if(!archivo.is_open()){
             continue;
         }
-        string linea;
+        std::string linea;
         getline(archivo,linea);
         size_t p1=linea.find(DELIMITADOR);
         size_t p2=linea.find(DELIMITADOR,p1+1);
-        if(p1==string::npos || p1==string::npos){
+        if(p1==std::string::npos || p1==std::string::npos){
             continue;
         }
 
-        string nombre=linea.substr(0,p1);
-        string password=linea.substr(p1+1,p2-(p1+1));
-        string nivelTxt=linea.substr(p2+1);
+        std::string nombre=linea.substr(0,p1);
+        std::string password=linea.substr(p1+1,p2-(p1+1));
+        std::string nivelTxt=linea.substr(p2+1);
         try {
             nivel=stoi(nivelTxt);
         } catch (...) {
@@ -96,8 +95,8 @@ void UserManager::inicializarArreglo(){
     }
 }
 
-int UserManager::buscarUsuario(string nombre){
-    string nombreMinuscula=convertirAMinusculas(nombre);
+int UserManager::buscarUsuario(std::string nombre){
+    std::string nombreMinuscula=convertirAMinusculas(nombre);
     for(int i=0;i<cantidad;i++){
         if(nombreMinuscula==convertirAMinusculas(usuarios[i]->getNombre())){
             return i;
@@ -106,8 +105,8 @@ int UserManager::buscarUsuario(string nombre){
     return -1;
 }
 
-string UserManager::convertirAMinusculas(string textoOriginal){
-    string resultado=textoOriginal;
+std::string UserManager::convertirAMinusculas(std::string textoOriginal){
+    std::string resultado=textoOriginal;
     for(size_t i=0;i<resultado.length();i++){
         resultado[i]=static_cast<char>(tolower(static_cast<unsigned char>(resultado[i])));
     }
@@ -123,6 +122,5 @@ UserManager::~UserManager(){
     for (int i = 0; i < cantidad; ++i) {
         delete usuarios[i];
     }
-
 }
 

@@ -1,25 +1,25 @@
 #ifndef BLOQUE_H
 #define BLOQUE_H
 
-#include <QGraphicsRectItem>
-#include <QBrush>
-#include <QPen>
-#include <QColor>
+#include <QGraphicsPixmapItem>
+#include <QPixmap>
+
+using namespace std;
 
 class Bloque
 {
 private:
-    QGraphicsRectItem* grafico;
+    QGraphicsPixmapItem* grafico;
     bool destruido;
 
 public:
-    Bloque(float x, float y, QColor color);
+    Bloque();
     ~Bloque();
 
-    QGraphicsRectItem* getGrafico();
-
+    QGraphicsPixmapItem* getGrafico();
     void destruir();
     bool estaDestruido();
+    void inicializar(float x, float y, string rutaImagen);
 };
 
 #endif // BLOQUE_H

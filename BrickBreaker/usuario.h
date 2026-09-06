@@ -1,22 +1,20 @@
 #ifndef USUARIO_H
 #define USUARIO_H
 
-#include<string>
-
-using namespace std;
+#include <string>
 
 class Usuario
 {
 public:
-    Usuario(string nombre, string password);
-    string getNombre();
-    string getPassword();
+    Usuario(std::string nombre, std::string password);
+    std::string getNombre();
+    std::string getPassword();
     void pasarNivel();
     int getUltimoNivel();
     bool isPasado(int nivel);
 private:
-    string nombre;
-    string password;
+    std::string nombre;
+    std::string password;
     bool niveles[5];
 };
 

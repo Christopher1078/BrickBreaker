@@ -1,6 +1,6 @@
 #include "menuniveles.h"
-#include "juego.h"
 #include "menuprincipal.h"
+#include "nivel1.h"
 #include "nivel2.h"
 #include "Nivel3.h"
 
@@ -20,7 +20,7 @@ MenuNiveles::MenuNiveles(QGraphicsScene* escena, QGraphicsView* vista, UserManag
         "border: none; }"
     });*/
     btnNivel1->show();
-    connect(btnNivel1,&QPushButton::clicked,this,[this, escena, vista](){
+    connect(btnNivel1,&QPushButton::clicked,this,[this, escena, vista, manager](){
         btnNivel1->hide();
         btnNivel2->hide();
         btnNivel3->hide();
@@ -29,7 +29,7 @@ MenuNiveles::MenuNiveles(QGraphicsScene* escena, QGraphicsView* vista, UserManag
         btnRegresar->hide();
         escena->clear();
         vista->removeEventFilter(this);
-        juego=new Juego(escena,vista);
+        nivel1=new Nivel1(escena,vista, manager);
     });
 
     btnNivel2=new QPushButton(vista);

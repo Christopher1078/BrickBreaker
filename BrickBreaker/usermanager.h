@@ -1,7 +1,7 @@
 #ifndef USERMANAGER_H
 #define USERMANAGER_H
 
-#include<windows.h>
+#include <windows.h>
 
 #include "usuario.h"
 
@@ -10,13 +10,13 @@ class UserManager
 public:
     UserManager();
     ~UserManager();
-    bool iniciarSesion(string nombre, string password);
-    bool crearCuenta(string nombre, string password);
+    bool iniciarSesion(std::string nombre, std::string password);
+    bool crearCuenta(std::string nombre, std::string password);
     void guardarArreglo(Usuario* usuarios[]);
     Usuario* getActual();
-    int buscarUsuario(string nombre);
+    int buscarUsuario(std::string nombre);
     void inicializarArreglo();
-    string convertirAMinusculas(string textoOriginal);
+    std::string convertirAMinusculas(std::string textoOriginal);
     void cerrarSesion();
 private:
     Usuario* actual;

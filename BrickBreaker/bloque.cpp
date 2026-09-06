@@ -1,23 +1,22 @@
 #include "bloque.h"
 
-Bloque::Bloque(float x, float y, QColor color)
-{
-    grafico = new QGraphicsRectItem(0, 0, 80, 25);
+Bloque::Bloque(){
+    grafico=nullptr;
+    destruido=false;
+}
 
+void Bloque::inicializar(float x,float y, string rutaImagen){
+    QPixmap imagen(rutaImagen.c_str());
+    imagen=imagen.scaled(55,25,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
+    grafico = new QGraphicsPixmapItem(imagen);
     grafico->setPos(x, y);
-
-    grafico->setBrush(QBrush(color));
-
-    grafico->setPen(QPen(Qt::white, 2));
-
-    destruido = false;
 }
 
 Bloque::~Bloque(){
     delete grafico;
 }
 
-QGraphicsRectItem* Bloque::getGrafico()
+QGraphicsPixmapItem* Bloque::getGrafico()
 {
     return grafico;
 }

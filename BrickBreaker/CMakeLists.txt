@@ -31,6 +31,7 @@ add_executable(BrickBreaker
     Nivel3.h
     Nivel3.h
     Nivel3.cpp
+    nivel1.h nivel1.cpp
 )
 
 qt_add_resources(BrickBreaker "recursos"
@@ -43,6 +44,7 @@ qt_add_resources(BrickBreaker "recursos"
 	imagenes/iniciarsesion.png
 	imagenes/menuprincipal.png
 	imagenes/menuniveles.png
+	imagenes/bloque_morado.png
 	imagenes/bloque_naranja.png
 	imagenes/bloque_verde.png
 	imagenes/bloque_azul.png
