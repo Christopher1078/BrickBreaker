@@ -5,7 +5,7 @@ Bloque::Bloque(){
     destruido=false;
 }
 
-void Bloque::inicializar(float x,float y, string rutaImagen){
+void Bloque::inicializar(float x,float y, std::string rutaImagen){
     QPixmap imagen(rutaImagen.c_str());
     imagen=imagen.scaled(55,25,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
     grafico = new QGraphicsPixmapItem(imagen);

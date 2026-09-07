@@ -15,8 +15,6 @@
 class MenuInicio;
 class MenuPrincipal;
 
-using namespace std;
-
 class IniciarSesion: public QObject
 {
     Q_OBJECT

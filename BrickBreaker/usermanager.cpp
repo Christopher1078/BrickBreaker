@@ -26,7 +26,7 @@ bool UserManager::crearCuenta(std::string nombre, std::string password){
     actual=new Usuario{nombre,password};
     usuarios[cantidad]=actual;
     cantidad++;
-    guardarArreglo(usuarios);
+    guardarArreglo();
     return true;
 }
 
@@ -45,16 +45,29 @@ bool UserManager::iniciarSesion(std::string nombre, std::string password){
     return true;
 }
 
-void UserManager::guardarArreglo(Usuario* usuarios[]){
+void UserManager::guardarArreglo(){
     for(int i=0;i<cantidad;i++){
         std::filesystem::create_directory("Usuarios/"+usuarios[i]->getNombre());
         std::ofstream archivo("Usuarios/"+usuarios[i]->getNombre()+"/usuario.txt",std::ios::trunc);
-        if(!archivo.is_open()){
+        std::ofstream archivoBin("Usuarios/"+usuarios[i]->getNombre()+"/datos.dat",std::ios::trunc | std::ios::binary);
+        if(!archivo.is_open() || !archivoBin.is_open()){
             continue;
         }
         archivo << usuarios[i]->getNombre() << DELIMITADOR
                 << usuarios[i]->getPassword() << DELIMITADOR
                 << usuarios[i]->getUltimoNivel() << "\n";
+
+        for(int j=0;j<5;j++){
+            int estrella=usuarios[i]->getEstrellas(j);
+            archivoBin.write(reinterpret_cast<char*>(&estrella), sizeof(estrella));
+        }
+
+        for(int j=0;j<5;j++){
+            int mejor=usuarios[i]->getMejorPuntaje(j);
+            archivoBin.write(reinterpret_cast<char*>(&mejor), sizeof(mejor));
+        }
+
+        archivoBin.close();
         archivo.close();
     }
 }
@@ -64,8 +77,10 @@ void UserManager::inicializarArreglo(){
         int nivel;
         Usuario* usuario;
         std::filesystem::path ruta=entrada.path()/"usuario.txt";
+        std::filesystem::path rutaBin=entrada.path()/"datos.dat";
         std::ifstream archivo (ruta);
-        if(!archivo.is_open()){
+        std::ifstream archivoBin(rutaBin, std::ios::binary);
+        if(!archivo.is_open() || !archivoBin.is_open()){
             continue;
         }
         std::string linea;
@@ -86,12 +101,28 @@ void UserManager::inicializarArreglo(){
         }
 
         usuario=new Usuario{nombre,password};
+
         for(int i=0;i<nivel;i++){
             usuario->pasarNivel();
         }
+
         usuarios[cantidad]=usuario;
+
+        for(int i=0;i<5;i++){
+            int estrella;
+            archivoBin.read(reinterpret_cast<char*>(&estrella), sizeof(estrella));
+            usuarios[cantidad]->setEstrellas(estrella,i);
+        }
+
+        for(int i=0;i<5;i++){
+            int puntaje;
+            archivoBin.read(reinterpret_cast<char*>(&puntaje), sizeof(puntaje));
+            usuarios[cantidad]->setMejorPuntaje(puntaje,i);
+        }
+
         cantidad++;
         archivo.close();
+        archivoBin.close();
     }
 }
 
@@ -117,9 +148,12 @@ void UserManager::cerrarSesion(){
     actual=nullptr;
 }
 
+Usuario* UserManager::getActual(){
+    return actual;
+}
+
 UserManager::~UserManager(){
-    delete actual;
-    for (int i = 0; i < cantidad; ++i) {
+    for (int i = 0; i < cantidad; i++) {
         delete usuarios[i];
     }
 }

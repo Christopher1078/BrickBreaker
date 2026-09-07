@@ -1,14 +1,18 @@
 #include "juego.h"
-
+#include "pantalladerrota.h"
+#include "pantallavictoria.h"
+#include "usermanager.h"
 Juego::Juego(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manager)
 {
     this->escena=escena;
     this->vista=vista;
+    this->manager=manager;
 
     vidas=3;
     puntos=0;
     tiempo=0;
     frames=0;
+    cantBloques=0;
 
     QPixmap fondo(":/imagenes/fondo.png");
     fondo=fondo.scaled(800,600,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
@@ -32,15 +36,18 @@ Juego::Juego(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manager)
     timer=new QTimer;
 
     QObject::connect(timer,&QTimer::timeout,this,&Juego::actualizar);
-
-    bloques=new Bloque*[FILAS];
-    for(int i=0;i<FILAS;i++){
-        bloques[i]=new Bloque[COLUMNAS];
-    }
 }
 
 void Juego::crearBarraSuperior(){
     txtVidas=escena->addText("VIDAS: ");
+
+    for(int i=0;i<3;i++){
+        QPixmap imagen(":/imagenes/corazon.png");
+        imagen=imagen.scaled(30,30,Qt::KeepAspectRatio,Qt::SmoothTransformation);
+
+        corazones[i]=escena->addPixmap(imagen);
+        corazones[i]->setPos(100+i*40,10);
+    }
     txtPuntos=escena->addText("PUNTOS: 000000");
     txtTiempo=escena->addText("TIEMPO: 00:00");
 
@@ -76,7 +83,7 @@ void Juego::actualizar()
     pelota->mover();
     pelota->comprobarParedes();
 
-    if(pelota->getGrafico()->y()>590){
+    if(pelota->getGrafico()->y()>585){
         perderVida();
         return;
     }
@@ -100,11 +107,13 @@ void Juego::actualizar()
             if(bloques[i][j].getGrafico()!=nullptr){
                 if(!bloques[i][j].estaDestruido()){
                     if(pelota->colisionaCon(bloques[i][j].getGrafico())){
+                        pelota->rebotarBloque(bloques[i][j].getGrafico());
                         bloques[i][j].destruir();
                         escena->removeItem(bloques[i][j].getGrafico());
-                        pelota->rebotarBloque(bloques[i][j].getGrafico());
+                        cantBloques--;
                         puntos+=50;
                         actualizarBarra();
+                        verificarVictoria();
                         return;
                     }
                 }
@@ -114,7 +123,16 @@ void Juego::actualizar()
 }
 
 void Juego::actualizarBarra(){
-    txtVidas->setPlainText("VIDAS: "+QString::number(vidas));
+    txtVidas->setPlainText("VIDAS: ");
+
+    for(int i=0;i<3;i++){
+        if(i<vidas){
+            corazones[i]->setVisible(true);
+        }else{
+            corazones[i]->setVisible(false);
+        }
+    }
+
     txtPuntos->setPlainText("PUNTOS: "+QString("%1").arg(puntos,6,10,QChar('0')));
 
     int minutos=tiempo/60;
@@ -131,15 +149,91 @@ void Juego::reiniciarPelota(){
 
 void Juego::perderVida(){
     vidas--;
+    actualizarBarra();
     if(vidas<=0){
         timer->stop();
+        vista->removeEventFilter(this);
+        limpiarNivel();
+        derrota=new PantallaDerrota(escena, vista, manager, puntos, tiempo, cantBloques);
         return;
     }
     reiniciarPelota();
 }
 
+void Juego::verificarVictoria(){
+    if(cantBloques==0){
+        int bonusTiempo;
+        int bonusVidas;
+        int puntoFinal;
+        int estrellas;
+        timer->stop();
+        calcularPuntaje(bonusTiempo, bonusVidas, puntoFinal, estrellas);
+        manager->getActual()->setEstrellas(estrellas,nivel);
+        manager->getActual()->setMejorPuntaje(puntoFinal, nivel);
+        if(!manager->getActual()->isPasado(nivel+1)){
+            manager->getActual()->pasarNivel();
+        }
+        manager->guardarArreglo();
+        vista->removeEventFilter(this);
+        limpiarNivel();
+        victoria=new PantallaVictoria(escena,vista,manager, puntoFinal, puntos, bonusTiempo, bonusVidas, estrellas);
+    }
+}
+
+void Juego::limpiarNivel(){
+    if(pelota != nullptr && pelota->getGrafico() != nullptr){
+        escena->removeItem(pelota->getGrafico());
+    }
+
+    if(paleta != nullptr && paleta->getGrafico() != nullptr){
+        escena->removeItem(paleta->getGrafico());
+    }
+
+    for(int i = 0; i < FILAS; i++){
+        for(int j = 0; j < COLUMNAS; j++){
+            if(bloques[i][j].getGrafico() != nullptr && !bloques[i][j].estaDestruido()){
+                escena->removeItem(bloques[i][j].getGrafico());
+            }
+        }
+    }
+
+    escena->removeItem(txtVidas);
+    escena->removeItem(txtPuntos);
+    escena->removeItem(txtTiempo);
+
+    for(int i=0; i<3; i++){
+        escena->removeItem(corazones[i]);
+    }
+}
+
+void Juego::calcularPuntaje(int &bonusTiempo, int &bonusVidas, int &puntoFinal, int &estrellas){
+    bonusTiempo=(tiempoObjetivo-tiempo)*10;
+
+    if(bonusTiempo<0){
+        bonusTiempo=0;
+    }
+
+    bonusVidas=(vidas-1)*500;
+
+    if(vidas==0){
+        bonusVidas=0;
+    }
+
+    estrellas=((bonusTiempo+bonusVidas)*3)/bonusObjetivo;
+    if(estrellas>3){
+        estrellas=3;
+    }
+
+    puntoFinal=puntos+bonusTiempo+bonusVidas;
+}
+
+
 bool Juego::eventFilter(QObject* objeto, QEvent* evento)
 {
+
+    if(vidas==0 || cantBloques==0){
+        return QObject::eventFilter(objeto,evento);
+    }
 
     if (evento->type() == QEvent::KeyPress)
     {
@@ -165,5 +259,12 @@ Juego::~Juego(){
     delete pelota;
     delete paleta;
     delete timer;
+    for(int i=0;i<FILAS;i++){
+        delete[] bloques[i];
+    }
+    for(int i=0;i<3;i++){
+        delete corazones[i];
+    }
+    delete[] bloques;
 
 }

@@ -19,19 +19,18 @@ add_executable(BrickBreaker
     Bloque.cpp
     Bloque.h
     menuinicio.h menuinicio.cpp
-    Recursos.qrc
     crearcuenta.h crearcuenta.cpp
     usuario.h usuario.cpp
     usermanager.h usermanager.cpp
     iniciarsesion.h iniciarsesion.cpp
     menuprincipal.h menuprincipal.cpp
     menuniveles.h menuniveles.cpp
-    Nivel2.h
-    Nivel2.cpp
-    Nivel3.h
-    Nivel3.h
-    Nivel3.cpp
     nivel1.h nivel1.cpp
+    pantallavictoria.h pantallavictoria.cpp
+    pantalladerrota.h pantalladerrota.cpp
+    nivel2.h nivel2.cpp
+    nivel3.h nivel3.cpp
+    nivel4.h nivel4.cpp
 )
 
 qt_add_resources(BrickBreaker "recursos"
@@ -53,6 +52,34 @@ qt_add_resources(BrickBreaker "recursos"
 	imagenes/bloque_rojo.png
 	imagenes/fondo.png
 	imagenes/corazon.png
+	imagenes/victoria.png
+	imagenes/estrellas.png
+	imagenes/1-0.png
+	imagenes/1-1.png
+	imagenes/1-2.png
+	imagenes/1-3.png
+	imagenes/2.png
+	imagenes/2-0.png
+	imagenes/2-1.png
+	imagenes/2-2.png
+	imagenes/2-3.png
+	imagenes/3.png
+	imagenes/3-0.png
+	imagenes/3-1.png
+	imagenes/3-2.png
+	imagenes/3-3.png
+	imagenes/4.png
+	imagenes/4-0.png
+	imagenes/4-1.png
+	imagenes/4-2.png
+	imagenes/4-2.png
+	imagenes/4-3.png
+	imagenes/5.png
+	imagenes/5-0.png
+	imagenes/5-1.png
+	imagenes/5-2.png
+	imagenes/5-3.png
+	imagenes/derrota.png
 )
 
 target_link_libraries(BrickBreaker

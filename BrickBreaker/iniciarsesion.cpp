@@ -44,8 +44,8 @@ IniciarSesion::IniciarSesion(QGraphicsScene *escena, QGraphicsView *vista) {
     btnIniciar->setGeometry(255,400,315,55);
     btnIniciar->show();
     connect(btnIniciar, &QPushButton::clicked,this,[this, escena, vista](){
-        string nombre=txtNombre->text().toStdString();
-        string password=txtPassword->text().toStdString();
+        std::string nombre=txtNombre->text().toStdString();
+        std::string password=txtPassword->text().toStdString();
 
         if(nombre.empty() || password.empty()){
             MessageBox(NULL,TEXT("NO PUEDE HABER PARAMETROS VACIOS"),TEXT("ERROR"),MB_OK);
@@ -84,10 +84,10 @@ IniciarSesion::IniciarSesion(QGraphicsScene *escena, QGraphicsView *vista) {
     connect(btnMostrar,&QPushButton::clicked,this,[this, escena](){
         if(txtPassword->echoMode()==QLineEdit::Password){
             txtPassword->setEchoMode(QLineEdit::Normal);
-            btnMostrar->setIcon(QIcon(":imagenes/ojo1.png"));
+            btnMostrar->setIcon(QIcon(":/imagenes/ojo1.png"));
         }else{
             txtPassword->setEchoMode(QLineEdit::Password);
-            btnMostrar->setIcon(QIcon(":imagenes/ojo2.png"));
+            btnMostrar->setIcon(QIcon(":/imagenes/ojo2.png"));
         }
     });
 

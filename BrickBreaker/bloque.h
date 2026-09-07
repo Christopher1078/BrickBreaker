@@ -4,8 +4,6 @@
 #include <QGraphicsPixmapItem>
 #include <QPixmap>
 
-using namespace std;
-
 class Bloque
 {
 private:
@@ -19,7 +17,7 @@ public:
     QGraphicsPixmapItem* getGrafico();
     void destruir();
     bool estaDestruido();
-    void inicializar(float x, float y, string rutaImagen);
+    void inicializar(float x, float y, std::string rutaImagen);
 };
 
 #endif // BLOQUE_H

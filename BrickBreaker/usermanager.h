@@ -12,7 +12,7 @@ public:
     ~UserManager();
     bool iniciarSesion(std::string nombre, std::string password);
     bool crearCuenta(std::string nombre, std::string password);
-    void guardarArreglo(Usuario* usuarios[]);
+    void guardarArreglo();
     Usuario* getActual();
     int buscarUsuario(std::string nombre);
     void inicializarArreglo();

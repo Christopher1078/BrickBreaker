@@ -15,8 +15,6 @@
 class MenuInicio;
 class MenuPrincipal;
 
-using namespace std;
-
 class CrearCuenta: public QObject
 {
     Q_OBJECT

@@ -15,19 +15,25 @@
 #include "bloque.h"
 
 class UserManager;
+class PantallaVictoria;
+class PantallaDerrota;
 
 class Juego : public QObject
 {
     Q_OBJECT
 
 protected:
-    const int FILAS=5;
-    const int COLUMNAS=12;
+    int FILAS;
+    int COLUMNAS;
     QGraphicsScene* escena;
     QGraphicsView* vista;
+    UserManager* manager;
     QGraphicsTextItem* txtVidas;
     QGraphicsTextItem* txtPuntos;
     QGraphicsTextItem* txtTiempo;
+    QGraphicsPixmapItem* corazones[3];
+    PantallaVictoria* victoria;
+    PantallaDerrota* derrota;
     QTimer* timer;
     Pelota* pelota;
     Paleta* paleta;
@@ -36,6 +42,10 @@ protected:
     int puntos;
     int tiempo;
     int frames;
+    int cantBloques;
+    int tiempoObjetivo;
+    int bonusObjetivo;
+    int nivel;
 
     bool eventFilter(QObject* objeto, QEvent* evento) override;
     void actualizar();
@@ -44,6 +54,9 @@ protected:
     void actualizarBarra();
     void perderVida();
     void reiniciarPelota();
+    void verificarVictoria();
+    void limpiarNivel();
+    void calcularPuntaje(int &bonusTiempo, int &bonusVida, int &puntoFinal, int &estrellas);
 public:
     Juego(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manager);
     virtual ~Juego();

@@ -1,9 +1,9 @@
-#include "nivel1.h"
+#include "nivel2.h"
 
-Nivel1::Nivel1(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manager):Juego(escena, vista, manager) {
-    tiempoObjetivo=180;
+Nivel2::Nivel2(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manager):Juego(escena,vista,manager) {
+    tiempoObjetivo=210;
     bonusObjetivo=1500;
-    nivel=0;
+    nivel=1;
     FILAS=5;
     COLUMNAS=12;
 
@@ -28,23 +28,14 @@ Nivel1::Nivel1(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manage
                 break;
             }
             case 2:{
-                if(j==5 || j==6){
-                    continue;
-                }
                 ruta=(":/imagenes/bloque_verde.png");
                 break;
             }
             case 3:{
-                if(j>=4 && j<=7){
-                    continue;
-                }
                 ruta=(":/imagenes/bloque_naranja.png");
                 break;
             }
             case 4:{
-                if(j>=3 && j<=8){
-                    continue;
-                }
                 ruta=(":/imagenes/bloque_rojo.png");
             }
             }
@@ -55,5 +46,3 @@ Nivel1::Nivel1(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manage
     }
     iniciarTimer();
 }
-
-

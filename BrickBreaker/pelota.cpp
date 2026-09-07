@@ -33,13 +33,39 @@ void Pelota::rebotarBloque(QGraphicsItem* bloque){
     float distanciaDerecha=bloqueRect.right()-pelotaRect.left();
     float distanciaArriba=pelotaRect.bottom()-bloqueRect.top();
     float distanciaAbajo=bloqueRect.bottom()-pelotaRect.top();
-    float menorHorizontal=std::min(distanciaIzquierda, distanciaDerecha);
-    float menorVertical=std::min(distanciaArriba, distanciaAbajo);
+
+    float menorHorizontal;
+    float menorVertical;
+
+    if(distanciaIzquierda<distanciaDerecha){
+        menorHorizontal=distanciaIzquierda;
+    }else{
+        menorHorizontal=distanciaDerecha;
+    }
+
+    if(distanciaArriba<distanciaAbajo){
+        menorVertical=distanciaArriba;
+    }else{
+        menorVertical=distanciaAbajo;
+    }
 
     if(menorHorizontal<menorVertical){
         velocidadX=-velocidadX;
+
+        if(distanciaIzquierda<distanciaDerecha){
+            grafico->setX(bloqueRect.left()-grafico->boundingRect().width());
+        }else{
+            grafico->setX(bloqueRect.right());
+        }
+
     }else{
         velocidadY=-velocidadY;
+
+        if(distanciaArriba<distanciaAbajo){
+            grafico->setY(bloqueRect.top()-grafico->boundingRect().height());
+        }else{
+            grafico->setY(bloqueRect.bottom());
+        }
     }
 }
 
@@ -85,6 +111,12 @@ void Pelota::comprobarParedes()
 
     if(grafico->x() > 770){
         grafico->setX(770);
+    }else if(grafico->x() < 20){
+        grafico->setX(20);
+    }
+
+    if(grafico->y() < 20){
+        grafico->setY(20);
     }
 }
 
