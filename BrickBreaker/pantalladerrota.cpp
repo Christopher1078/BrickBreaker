@@ -1,7 +1,12 @@
 #include "pantalladerrota.h"
 #include "menuprincipal.h"
+#include "nivel1.h"
+#include "nivel2.h"
+#include "nivel3.h"
+#include "nivel4.h"
+#include "nivel5.h"
 
-PantallaDerrota::PantallaDerrota(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manager, int puntos, int tiempo, int bloques) {
+PantallaDerrota::PantallaDerrota(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manager, int puntos, int tiempo, int bloques, int nivel) {
     QPixmap fondo(":/imagenes/derrota.png");
     fondo=fondo.scaled(800,600,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
 
@@ -32,8 +37,33 @@ PantallaDerrota::PantallaDerrota(QGraphicsScene* escena, QGraphicsView* vista, U
     btnReintentar=new QPushButton(vista);
     btnReintentar->setGeometry(55,440,349,85);
     btnReintentar->show();
-    connect(btnReintentar,&QPushButton::clicked,this,[](){
-
+    connect(btnReintentar,&QPushButton::clicked,this,[this, escena, vista, nivel, manager](){
+        btnReintentar->hide();
+        btnVolver->hide();
+        escena->clear();
+        vista->removeEventFilter(this);
+        switch(nivel){
+        case 0:{
+            nivel1=new Nivel1(escena, vista, manager);
+            break;
+        }
+        case 1:{
+            nivel2=new Nivel2(escena,vista,manager);
+            break;
+        }
+        case 2:{
+            nivel3=new Nivel3(escena,vista,manager);
+            break;
+        }
+        case 3:{
+            nivel4=new Nivel4(escena,vista,manager);
+            break;
+        }
+        case 4:{
+            nivel5=new Nivel5(escena,vista,manager);
+            break;
+        }
+        }
     });
 
     btnVolver=new QPushButton(vista);

@@ -4,8 +4,6 @@ Nivel1::Nivel1(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manage
     tiempoObjetivo=180;
     bonusObjetivo=1500;
     nivel=0;
-    FILAS=5;
-    COLUMNAS=12;
 
     bloques=new Bloque*[FILAS];
     for(int i=0;i<FILAS;i++){
@@ -14,8 +12,8 @@ Nivel1::Nivel1(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manage
 
     for(int i=0;i<FILAS;i++){
         for(int j=0;j<COLUMNAS;j++){
-            float x=j*60+40;
-            float y=i*30+40;
+            float x=j*90+40;
+            float y=i*50+40;
             std::string ruta;
 
             switch(i){
@@ -24,27 +22,28 @@ Nivel1::Nivel1(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manage
                 break;
             }
             case 1:{
+                if(j==1 || j==6){
+                    bloques[i][j].setTipo(1);
+                }
                 ruta=(":/imagenes/bloque_azul.png");
                 break;
             }
             case 2:{
-                if(j==5 || j==6){
-                    continue;
+                if(j==3){
+                    bloques[i][j].setPowerUp(1);
                 }
                 ruta=(":/imagenes/bloque_verde.png");
                 break;
             }
             case 3:{
-                if(j>=4 && j<=7){
-                    continue;
-                }
                 ruta=(":/imagenes/bloque_naranja.png");
                 break;
             }
             case 4:{
-                if(j>=3 && j<=8){
+                if(j!=3){
                     continue;
                 }
+                bloques[i][j].setPowerUp(3);
                 ruta=(":/imagenes/bloque_rojo.png");
             }
             }

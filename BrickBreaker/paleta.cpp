@@ -6,6 +6,7 @@ Paleta::Paleta()
     imagen=imagen.scaled(180,45,Qt::IgnoreAspectRatio,Qt::FastTransformation);
     grafico = new QGraphicsPixmapItem(imagen);
     grafico->setPos(350, 530);
+    grafico->setScale(1);
 
 }
 
@@ -31,4 +32,13 @@ void Paleta::reiniciar(){
 
 Paleta::~Paleta(){
     delete grafico;
+}
+
+void Paleta::hacerGrande(){
+    float nuevoAncho=350*1.1;
+    grafico->setPixmap(grafico->pixmap().scaled(nuevoAncho,45));
+}
+
+void Paleta::hacerNormal(){
+    grafico->setPixmap(grafico->pixmap().scaled(180,45));
 }

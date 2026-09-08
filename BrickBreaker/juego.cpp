@@ -7,7 +7,10 @@ Juego::Juego(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manager)
     this->escena=escena;
     this->vista=vista;
     this->manager=manager;
+    tiempoPaleta=0;
+    tiempoVeloz=0;
 
+    inicio=nullptr;
     vidas=3;
     puntos=0;
     tiempo=0;
@@ -78,6 +81,18 @@ void Juego::actualizar()
     if(frames>=60){
         tiempo++;
         frames=0;
+        if(tiempoPaleta>0){
+            tiempoPaleta--;
+            if(tiempoPaleta==0){
+                paleta->hacerNormal();
+            }
+        }
+        if(tiempoVeloz>0){
+            tiempoVeloz--;
+            if(tiempoVeloz==0){
+                pelota->disminuirVelocidad();
+            }
+        }
         actualizarBarra();
     }
     pelota->mover();
@@ -88,8 +103,67 @@ void Juego::actualizar()
         return;
     }
 
-    if (pelota->colisionaCon(paleta->getGrafico()))
-    {
+    NodoPowerUp* actual = inicio;
+
+    while(actual != nullptr){
+        actual->powerUp->mover();
+        actual = actual->siguiente;
+    }
+
+    NodoPowerUp* anterior = nullptr;
+    actual=inicio;
+
+    while(actual != nullptr){
+        PowerUp* powerUp = actual->powerUp;
+        if(powerUp->getGrafico()->y() > 590){
+            escena->removeItem(powerUp->getGrafico());
+            delete powerUp;
+
+            NodoPowerUp* borrar = actual;
+
+            if(anterior == nullptr){
+                inicio = actual->siguiente;
+            }
+            else{
+                anterior->siguiente = actual->siguiente;
+            }
+            actual = actual->siguiente;
+            delete borrar;
+        }else{
+            anterior=actual;
+            actual=actual->siguiente;
+        }
+    }
+
+    actual=inicio;
+    anterior=nullptr;
+
+    while(actual != nullptr){
+        PowerUp* powerUp = actual->powerUp;
+        if(powerUp->getGrafico()->collidesWithItem(paleta->getGrafico())){
+            activarPowerUp(powerUp->getTipo());
+            escena->removeItem(powerUp->getGrafico());
+            delete powerUp;
+
+            NodoPowerUp* borrar = actual;
+
+            if(anterior == nullptr){
+                inicio = actual->siguiente;
+            }
+            else{
+                anterior->siguiente = actual->siguiente;
+            }
+
+            actual = actual->siguiente;
+            delete borrar;
+        }
+        else{
+            anterior = actual;
+            actual = actual->siguiente;
+        }
+    }
+
+    if (pelota->colisionaCon(paleta->getGrafico())){
         float mitadPaleta=paleta->getGrafico()->boundingRect().width()/2;
         float centroPaleta=paleta->getGrafico()->x()+mitadPaleta;
         float centroPelota=pelota->getGrafico()->x()+pelota->getGrafico()->boundingRect().width()/2;
@@ -109,8 +183,38 @@ void Juego::actualizar()
                     if(pelota->colisionaCon(bloques[i][j].getGrafico())){
                         pelota->rebotarBloque(bloques[i][j].getGrafico());
                         bloques[i][j].destruir();
-                        escena->removeItem(bloques[i][j].getGrafico());
-                        cantBloques--;
+                        if(bloques[i][j].estaDestruido()){
+                            int tipo=bloques[i][j].getPowerUp();
+                            if(tipo!=0){
+                                PowerUp* powerUp;
+                                switch(tipo){
+                                case 1:{
+                                    powerUp=new PowerUp(PALETA_LARGA);
+                                    break;
+                                }
+                                case 2:{
+                                    powerUp=new PowerUp(VELOCIDAD_EXTRA);
+                                    break;
+                                }
+                                case 3:{
+                                    powerUp=new PowerUp(VIDA_EXTRA);
+                                    break;
+                                }
+                                default:{
+                                    powerUp=new PowerUp(PELOTA_EXTRA);
+                                    break;
+                                }
+                                }
+                                powerUp->getGrafico()->setPos(bloques[i][j].getGrafico()->sceneBoundingRect().center());
+                                escena->addItem(powerUp->getGrafico());
+                                NodoPowerUp* nuevoNodo=new NodoPowerUp;
+                                nuevoNodo->powerUp=powerUp;
+                                nuevoNodo->siguiente=inicio;
+                                inicio=nuevoNodo;
+                            }
+                            escena->removeItem(bloques[i][j].getGrafico());
+                            cantBloques--;
+                        }
                         puntos+=50;
                         actualizarBarra();
                         verificarVictoria();
@@ -154,7 +258,7 @@ void Juego::perderVida(){
         timer->stop();
         vista->removeEventFilter(this);
         limpiarNivel();
-        derrota=new PantallaDerrota(escena, vista, manager, puntos, tiempo, cantBloques);
+        derrota=new PantallaDerrota(escena, vista, manager, puntos, tiempo, cantBloques, nivel);
         return;
     }
     reiniciarPelota();
@@ -176,7 +280,7 @@ void Juego::verificarVictoria(){
         manager->guardarArreglo();
         vista->removeEventFilter(this);
         limpiarNivel();
-        victoria=new PantallaVictoria(escena,vista,manager, puntoFinal, puntos, bonusTiempo, bonusVidas, estrellas);
+        victoria=new PantallaVictoria(escena,vista,manager, puntoFinal, puntos, bonusTiempo, bonusVidas, estrellas, nivel);
     }
 }
 
@@ -225,6 +329,30 @@ void Juego::calcularPuntaje(int &bonusTiempo, int &bonusVidas, int &puntoFinal, 
     }
 
     puntoFinal=puntos+bonusTiempo+bonusVidas;
+}
+
+void Juego::activarPowerUp(Tipo tipo){
+    switch(tipo){
+    case PALETA_LARGA:{
+        paleta->hacerGrande();
+        tiempoPaleta=10;
+        break;
+    }
+    case VELOCIDAD_EXTRA:{
+        pelota->aumentarVelocidad();
+        tiempoVeloz=10;
+        break;
+    }
+    case VIDA_EXTRA:{
+        if(vidas!=3){
+            vidas++;
+        }
+        break;
+    }
+    case PELOTA_EXTRA:{
+        break;
+    }
+    }
 }
 
 

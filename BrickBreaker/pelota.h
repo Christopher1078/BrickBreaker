@@ -28,6 +28,8 @@ public:
     void rebotarPaleta(float porcentaje);
     void rebotarBloque(QGraphicsItem* bloque);
     void reiniciarMovimiento();
+    void aumentarVelocidad();
+    void disminuirVelocidad();
 };
 
 #endif // PELOTA_H

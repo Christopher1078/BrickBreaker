@@ -5,7 +5,6 @@
 #include <QPixmap>
 #include <QGraphicsPixmapItem>
 #include <QApplication>
-#include <iostream>
 
 MenuInicio::MenuInicio(){
     escena=new QGraphicsScene;

@@ -3,6 +3,8 @@
 #include "nivel1.h"
 #include "nivel2.h"
 #include "nivel3.h"
+#include "nivel4.h"
+#include "nivel5.h"
 
 MenuNiveles::MenuNiveles(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manager) {
     QPixmap fondo(":/imagenes/menuniveles.png");
@@ -77,18 +79,38 @@ MenuNiveles::MenuNiveles(QGraphicsScene* escena, QGraphicsView* vista, UserManag
     btnNivel4=new QPushButton(vista);
     btnNivel4->setGeometry(490,250,132,155);
     btnNivel4->show();
-    connect(btnNivel4,&QPushButton::clicked,this,[this, manager](){
+    connect(btnNivel4,&QPushButton::clicked,this,[this, manager, escena, vista](){
         if(manager->getActual()->isPasado(3)){
+            btnNivel1->hide();
+            btnNivel2->hide();
+            btnNivel3->hide();
+            btnNivel4->hide();
+            btnNivel5->hide();
+            btnRegresar->hide();
 
+            escena->clear();
+
+            vista->removeEventFilter(this);
+            nivel4 = new Nivel4(escena,vista,manager);
         }
     });
 
     btnNivel5=new QPushButton(vista);
     btnNivel5->setGeometry(630, 250, 132, 155);
     btnNivel5->show();
-    connect(btnNivel5,&QPushButton::clicked,this,[this, manager](){
+    connect(btnNivel5,&QPushButton::clicked,this,[this, manager, escena, vista](){
         if(manager->getActual()->isPasado(4)){
+            btnNivel1->hide();
+            btnNivel2->hide();
+            btnNivel3->hide();
+            btnNivel4->hide();
+            btnNivel5->hide();
+            btnRegresar->hide();
 
+            escena->clear();
+
+            vista->removeEventFilter(this);
+            nivel5 = new Nivel5(escena,vista,manager);
         }
     });
 
@@ -177,7 +199,7 @@ MenuNiveles::MenuNiveles(QGraphicsScene* escena, QGraphicsView* vista, UserManag
                 break;
             }
             case 3:{
-                btnNivel4->setIcon(QIcon(":/imagemes/4-3.png"));
+                btnNivel4->setIcon(QIcon(":/imagenes/4-3.png"));
                 break;
             }
         }

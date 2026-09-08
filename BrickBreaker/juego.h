@@ -13,31 +13,38 @@
 #include "pelota.h"
 #include "paleta.h"
 #include "bloque.h"
+#include "powerup.h"
 
 class UserManager;
 class PantallaVictoria;
 class PantallaDerrota;
+
+struct NodoPowerUp{
+    PowerUp* powerUp;
+    NodoPowerUp* siguiente;
+};
 
 class Juego : public QObject
 {
     Q_OBJECT
 
 protected:
-    int FILAS;
-    int COLUMNAS;
+    const int FILAS=5;
+    const int COLUMNAS=8;
     QGraphicsScene* escena;
     QGraphicsView* vista;
     UserManager* manager;
     QGraphicsTextItem* txtVidas;
     QGraphicsTextItem* txtPuntos;
     QGraphicsTextItem* txtTiempo;
-    QGraphicsPixmapItem* corazones[3];
+    QGraphicsPixmapItem* corazones[4];
     PantallaVictoria* victoria;
     PantallaDerrota* derrota;
     QTimer* timer;
     Pelota* pelota;
     Paleta* paleta;
     Bloque** bloques;
+    NodoPowerUp* inicio;
     int vidas;
     int puntos;
     int tiempo;
@@ -46,6 +53,8 @@ protected:
     int tiempoObjetivo;
     int bonusObjetivo;
     int nivel;
+    int tiempoPaleta;
+    int tiempoVeloz;
 
     bool eventFilter(QObject* objeto, QEvent* evento) override;
     void actualizar();
@@ -57,6 +66,7 @@ protected:
     void verificarVictoria();
     void limpiarNivel();
     void calcularPuntaje(int &bonusTiempo, int &bonusVida, int &puntoFinal, int &estrellas);
+    void activarPowerUp(Tipo tipo);
 public:
     Juego(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manager);
     virtual ~Juego();

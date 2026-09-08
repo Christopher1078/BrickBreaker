@@ -31,6 +31,8 @@ add_executable(BrickBreaker
     nivel2.h nivel2.cpp
     nivel3.h nivel3.cpp
     nivel4.h nivel4.cpp
+    nivel5.h nivel5.cpp
+    powerup.h powerup.cpp
 )
 
 qt_add_resources(BrickBreaker "recursos"
@@ -80,6 +82,13 @@ qt_add_resources(BrickBreaker "recursos"
 	imagenes/5-2.png
 	imagenes/5-3.png
 	imagenes/derrota.png
+	imagenes/blindado_0.png
+	imagenes/blindado_1.png
+	imagenes/blindado_2.png
+	imagenes/vida_extra.png
+	imagenes/pelota_extra.png
+	imagenes/pelota_veloz.png
+	imagenes/paleta_larga.png
 )
 
 target_link_libraries(BrickBreaker

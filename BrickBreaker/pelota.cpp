@@ -29,43 +29,32 @@ void Pelota::rebotarBloque(QGraphicsItem* bloque){
     QRectF pelotaRect = grafico->sceneBoundingRect();
     QRectF bloqueRect = bloque->sceneBoundingRect();
 
-    float distanciaIzquierda=pelotaRect.right()-bloqueRect.left();
-    float distanciaDerecha=bloqueRect.right()-pelotaRect.left();
-    float distanciaArriba=pelotaRect.bottom()-bloqueRect.top();
-    float distanciaAbajo=bloqueRect.bottom()-pelotaRect.top();
+    float solapamientoX = std::min(pelotaRect.right(), bloqueRect.right()) - std::max(pelotaRect.left(), bloqueRect.left());
+    float solapamientoY = std::min(pelotaRect.bottom(), bloqueRect.bottom()) - std::max(pelotaRect.top(), bloqueRect.top());
 
-    float menorHorizontal;
-    float menorVertical;
-
-    if(distanciaIzquierda<distanciaDerecha){
-        menorHorizontal=distanciaIzquierda;
-    }else{
-        menorHorizontal=distanciaDerecha;
+    if(solapamientoX <= 0 || solapamientoY <= 0){
+        return;
     }
 
-    if(distanciaArriba<distanciaAbajo){
-        menorVertical=distanciaArriba;
-    }else{
-        menorVertical=distanciaAbajo;
+    float direccionX = velocidadX;
+    float direccionY = velocidadY;
+
+    if(solapamientoX < solapamientoY){
+        if(direccionX > 0){
+            grafico->moveBy(-solapamientoX, 0);
+        }else{
+            grafico->moveBy(solapamientoX, 0);
+        }
+        velocidadX = -velocidadX;
     }
 
-    if(menorHorizontal<menorVertical){
-        velocidadX=-velocidadX;
-
-        if(distanciaIzquierda<distanciaDerecha){
-            grafico->setX(bloqueRect.left()-grafico->boundingRect().width());
+    else{
+        if(direccionY > 0){
+            grafico->moveBy(0, -solapamientoY);
         }else{
-            grafico->setX(bloqueRect.right());
+            grafico->moveBy(0, solapamientoY);
         }
-
-    }else{
-        velocidadY=-velocidadY;
-
-        if(distanciaArriba<distanciaAbajo){
-            grafico->setY(bloqueRect.top()-grafico->boundingRect().height());
-        }else{
-            grafico->setY(bloqueRect.bottom());
-        }
+        velocidadY = -velocidadY;
     }
 }
 
@@ -138,6 +127,22 @@ bool Pelota::estaBajando()
 void Pelota::reiniciarMovimiento(){
     velocidadX=4;
     velocidadY=-4;
+}
+
+void Pelota::aumentarVelocidad(){
+    velocidadX*=1.5;
+    velocidadY*=1.5;
+    if(velocidadX>10 || velocidadX<-10){
+        velocidadX=(velocidadX>0)? 10 : -10;
+    }
+    if(velocidadY>10 || velocidadY<-10){
+        velocidadY=(velocidadY>0)? 10:-10;
+    }
+}
+
+void Pelota::disminuirVelocidad(){
+    velocidadX = (velocidadX>0)?4:-4;
+    velocidadY = (velocidadY>0)?4:-4;
 }
 
 Pelota::~Pelota(){

@@ -1,9 +1,9 @@
-#include "nivel2.h"
+#include "nivel5.h"
 
-Nivel2::Nivel2(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manager):Juego(escena,vista,manager) {
-    tiempoObjetivo=110;
+Nivel5::Nivel5(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manager):Juego(escena,vista,manager) {
+    tiempoObjetivo=210;
     bonusObjetivo=1500;
-    nivel=1;
+    nivel=4;
 
     bloques=new Bloque*[FILAS];
     for(int i=0;i<FILAS;i++){
@@ -18,7 +18,7 @@ Nivel2::Nivel2(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manage
 
             switch(i){
             case 0:{
-                if(j==3 || j==4){
+                if(j==1 || j==6){
                     bloques[i][j].setTipo(1);
                 }
                 ruta=(":/imagenes/bloque_morado.png");
@@ -32,8 +32,8 @@ Nivel2::Nivel2(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manage
                 break;
             }
             case 2:{
-                if(j==4){
-                    bloques[i][j].setPowerUp(2);
+                if(j==3 || j==4){
+                    bloques[i][j].setTipo(1);
                 }
                 ruta=(":/imagenes/bloque_verde.png");
                 break;
@@ -42,11 +42,17 @@ Nivel2::Nivel2(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manage
                 if(j==1 || j==6){
                     bloques[i][j].setTipo(1);
                 }
+                if(j==3){
+                    bloques[i][j].setPowerUp(1);
+                }
                 ruta=(":/imagenes/bloque_naranja.png");
                 break;
             }
             case 4:{
-                continue;
+                if(j==3){
+                    bloques[i][j].setPowerUp(3);
+                }
+                ruta=(":/imagenes/bloque_rojo.png");
             }
             }
             cantBloques++;
@@ -55,4 +61,5 @@ Nivel2::Nivel2(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manage
         }
     }
     iniciarTimer();
+
 }

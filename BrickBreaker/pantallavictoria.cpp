@@ -1,7 +1,11 @@
 #include "pantallavictoria.h"
 #include "menuprincipal.h"
+#include "nivel2.h"
+#include "nivel3.h"
+#include "nivel4.h"
+#include "nivel5.h"
 
-PantallaVictoria::PantallaVictoria(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manager, int puntosFinal, int base, int bonusTiempo, int bonusVida, int estrellas) {
+PantallaVictoria::PantallaVictoria(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manager, int puntosFinal, int base, int bonusTiempo, int bonusVida, int estrellas, int nivel) {
     QPixmap fondo(":/imagenes/victoria.png");
     fondo=fondo.scaled(800,600,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
 
@@ -41,8 +45,31 @@ PantallaVictoria::PantallaVictoria(QGraphicsScene* escena, QGraphicsView* vista,
     btnSiguiente=new QPushButton(vista);
     btnSiguiente->setGeometry(72,477,330,75);
     btnSiguiente->show();
-    connect(btnSiguiente,&QPushButton::clicked,this,[](){
-
+    connect(btnSiguiente,&QPushButton::clicked,this,[this, escena, vista, nivel, manager](){
+        if(nivel!=5){
+            btnSiguiente->hide();
+            btnVolver->hide();
+            escena->clear();
+            vista->removeEventFilter(this);
+            switch(nivel){
+            case 0:{
+                nivel2=new Nivel2(escena,vista,manager);
+                break;
+            }
+            case 1:{
+                nivel3=new Nivel3(escena,vista,manager);
+                break;
+            }
+            case 2:{
+                nivel4=new Nivel4(escena,vista,manager);
+                break;
+            }
+            case 3:{
+                nivel5=new Nivel5(escena,vista,manager);
+                break;
+            }
+            }
+        }
     });
 
     btnVolver=new QPushButton(vista);

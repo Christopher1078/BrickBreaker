@@ -18,6 +18,8 @@ public:
     void moverIzquierda();
     void moverDerecha();
     void reiniciar();
+    void hacerGrande();
+    void hacerNormal();
 };
 
 #endif // PALETA_H
