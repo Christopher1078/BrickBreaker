@@ -215,7 +215,9 @@ void Juego::actualizar()
                             escena->removeItem(bloques[i][j].getGrafico());
                             cantBloques--;
                         }
-                        puntos+=50;
+                        if(bloques[i][j].getTipoBloque()!=METALICO){
+                            puntos+=50;
+                        }
                         actualizarBarra();
                         verificarVictoria();
                         return;

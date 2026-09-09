@@ -1,7 +1,7 @@
 #include "nivel1.h"
 
 Nivel1::Nivel1(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manager):Juego(escena, vista, manager) {
-    tiempoObjetivo=180;
+    tiempoObjetivo=120;
     bonusObjetivo=1500;
     nivel=0;
 
@@ -23,7 +23,7 @@ Nivel1::Nivel1(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manage
             }
             case 1:{
                 if(j==1 || j==6){
-                    bloques[i][j].setTipo(1);
+                    bloques[i][j].setBlindado();
                 }
                 ruta=(":/imagenes/bloque_azul.png");
                 break;

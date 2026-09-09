@@ -35,7 +35,7 @@ Paleta::~Paleta(){
 }
 
 void Paleta::hacerGrande(){
-    float nuevoAncho=350*1.1;
+    float nuevoAncho=350*1.05;
     grafico->setPixmap(grafico->pixmap().scaled(nuevoAncho,45));
 }
 

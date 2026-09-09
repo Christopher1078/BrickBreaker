@@ -89,6 +89,7 @@ qt_add_resources(BrickBreaker "recursos"
 	imagenes/pelota_extra.png
 	imagenes/pelota_veloz.png
 	imagenes/paleta_larga.png
+	imagenes/metalico.png
 )
 
 target_link_libraries(BrickBreaker

@@ -1,7 +1,7 @@
 #include "nivel3.h"
 
 Nivel3::Nivel3(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manager):Juego(escena,vista,manager) {
-    tiempoObjetivo=210;
+    tiempoObjetivo=200;
     bonusObjetivo=1500;
     nivel=2;
 
@@ -19,7 +19,7 @@ Nivel3::Nivel3(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manage
             switch(i){
             case 0:{
                 if(j>=2 && j<=5){
-                    bloques[i][j].setTipo(1);
+                    bloques[i][j].setBlindado();
                 }
                 ruta=(":/imagenes/bloque_morado.png");
                 break;
@@ -37,7 +37,7 @@ Nivel3::Nivel3(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manage
             }
             case 3:{
                 if(j==0 || j==7){
-                    bloques[i][j].setTipo(1);
+                    bloques[i][j].setBlindado();
                 }
                 ruta=(":/imagenes/bloque_naranja.png");
                 break;
@@ -46,6 +46,8 @@ Nivel3::Nivel3(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manage
                 if(j>=2 && j<=5){
                     continue;
                 }
+                bloques[i][j].setMetalico();
+                cantBloques--;
                 ruta=(":/imagenes/bloque_rojo.png");
                 break;
             }

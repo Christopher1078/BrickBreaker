@@ -1,7 +1,7 @@
 #include "nivel4.h"
 
 Nivel4::Nivel4(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manager):Juego(escena,vista,manager) {
-    tiempoObjetivo=210;
+    tiempoObjetivo=230;
     bonusObjetivo=1500;
     nivel=3;
 
@@ -16,10 +16,15 @@ Nivel4::Nivel4(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manage
             float y=i*50+40;
             std::string ruta;
 
+            if(j==0 || j==7){
+                bloques[i][j].setMetalico();
+                cantBloques--;
+            }
+
             switch(i){
             case 0:{
                 if(j>=2 && j<=5){
-                    bloques[i][j].setTipo(1);
+                    bloques[i][j].setBlindado();
                 }
                 ruta=(":/imagenes/bloque_morado.png");
                 break;
@@ -30,17 +35,17 @@ Nivel4::Nivel4(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manage
             }
             case 2:{
                 if(j==1 || j==6){
-                    bloques[i][j].setTipo(1);
+                    bloques[i][j].setBlindado();
                 }
                 if(j==4){
-                    bloques[i][j].setPowerUp(2);
+                    //bloques[i][j].setPowerUp(2);
                 }
                 ruta=(":/imagenes/bloque_verde.png");
                 break;
             }
             case 3:{
                 if(j==2 || j==5){
-                    bloques[i][j].setTipo(1);
+                    bloques[i][j].setBlindado();
                 }
                 ruta=(":/imagenes/bloque_naranja.png");
                 break;
@@ -48,6 +53,10 @@ Nivel4::Nivel4(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manage
             case 4:{
                 if(j==3){
                     bloques[i][j].setPowerUp(3);
+                }
+                if(j==1){
+                    bloques[i][j].setMetalico();
+                    cantBloques--;
                 }
                 ruta=(":/imagenes/bloque_rojo.png");
             }
