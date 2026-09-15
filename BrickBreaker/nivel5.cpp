@@ -68,6 +68,9 @@ Nivel5::Nivel5(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manage
                 if(j==3){
                     bloques[i][j].setPowerUp(1);
                 }
+                if(j==4){
+                    bloques[i][j].setPowerUp(4);
+                }
                 ruta=(":/imagenes/bloque_naranja.png");
                 break;
             }

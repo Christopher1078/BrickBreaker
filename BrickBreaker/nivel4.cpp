@@ -73,6 +73,9 @@ Nivel4::Nivel4(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manage
                     bloques[i][j].setMetalico();
                     cantBloques--;
                 }
+                if(j==5){
+                    bloques[i][j].setPowerUp(4);
+                }
                 ruta=(":/imagenes/bloque_rojo.png");
             }
             }

@@ -33,6 +33,7 @@ add_executable(BrickBreaker
     nivel4.h nivel4.cpp
     nivel5.h nivel5.cpp
     powerup.h powerup.cpp
+    pantallarecords.h pantallarecords.cpp
 )
 
 qt_add_resources(BrickBreaker "recursos"
@@ -90,6 +91,7 @@ qt_add_resources(BrickBreaker "recursos"
 	imagenes/pelota_veloz.png
 	imagenes/paleta_larga.png
 	imagenes/metalico.png
+	imagenes/Records.png
 )
 
 target_link_libraries(BrickBreaker

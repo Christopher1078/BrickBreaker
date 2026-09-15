@@ -51,6 +51,9 @@ Nivel3::Nivel3(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manage
                 if(j==0 || j==7){
                     bloques[i][j].setBlindado();
                 }
+                if(j==3){
+                    bloques[i][j].setPowerUp(4);
+                }
                 ruta=(":/imagenes/bloque_naranja.png");
                 break;
             }

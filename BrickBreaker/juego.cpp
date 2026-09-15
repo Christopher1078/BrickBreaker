@@ -78,8 +78,7 @@ void Juego::iniciarTimer(){
     vista->show();
 }
 
-void Juego::actualizar()
-{
+void Juego::actualizar(){
     frames++;
     if(frames>=60){
         tiempo++;
@@ -101,9 +100,45 @@ void Juego::actualizar()
     pelota->mover();
     pelota->comprobarParedes();
 
-    if(pelota->getGrafico()->y()>585){
+    NodoPelota* pelotaActual=pelotaInicio;
+
+    while(pelotaActual!=nullptr){
+        pelotaActual->pelota->mover();
+        pelotaActual=pelotaActual->siguiente;
+    }
+
+    pelotaActual=pelotaInicio;
+
+    while(pelotaActual!=nullptr){
+        pelotaActual->pelota->comprobarParedes();
+        pelotaActual=pelotaActual->siguiente;
+    }
+
+    pelotaActual=pelotaInicio;
+
+    while(pelotaActual!=nullptr){
+        NodoPelota* siguiente=pelotaActual->siguiente;
+        if(pelotaActual->pelota->getGrafico()->y()>585){
+            eliminarPelota(pelotaActual);
+        }
+        pelotaActual=siguiente;
+    }
+
+    if(pelota->getGrafico()->y()>585 && pelotaInicio==nullptr){
         perderVida();
         return;
+    }
+
+    pelotaActual=pelotaInicio;
+
+    while(pelotaActual!=nullptr){
+        if (pelotaActual->pelota->colisionaCon(paleta->getGrafico())){
+            pelotaActual->pelota->rebotarPaleta(paleta->getGrafico());
+
+            float nuevaY=paleta->getGrafico()->y()-pelotaActual->pelota->getGrafico()->boundingRect().height();
+            pelotaActual->pelota->getGrafico()->setY(nuevaY);
+        }
+        pelotaActual=pelotaActual->siguiente;
     }
 
     NodoPowerUp* actual = inicio;
@@ -137,66 +172,13 @@ void Juego::actualizar()
         pelota->getGrafico()->setY(nuevaY);
     }
 
-    for(int i=0;i<FILAS;i++){
-        for(int j=0;j<COLUMNAS;j++){
-            if(bloques[i][j].getGrafico()!=nullptr){
-                if(!bloques[i][j].estaDestruido()){
-                    bloques[i][j].mover();
-                    if(pelota->colisionaCon(bloques[i][j].getGrafico())){
-                        pelota->rebotarBloque(bloques[i][j].getGrafico());
-                        bloques[i][j].destruir();
-                        if(bloques[i][j].estaDestruido()){
-                            int tipo=bloques[i][j].getPowerUp();
-                            if(tipo!=0){
-                                PowerUp* powerUp;
-                                switch(tipo){
-                                case 1:{
-                                    powerUp=new PowerUp(PALETA_LARGA);
-                                    break;
-                                }
-                                case 2:{
-                                    powerUp=new PowerUp(VELOCIDAD_EXTRA);
-                                    break;
-                                }
-                                case 3:{
-                                    powerUp=new PowerUp(VIDA_EXTRA);
-                                    break;
-                                }
-                                default:{
-                                    powerUp=new PowerUp(PELOTA_EXTRA);
-                                    break;
-                                }
-                                }
-                                powerUp->getGrafico()->setPos(bloques[i][j].getGrafico()->sceneBoundingRect().center());
-                                escena->addItem(powerUp->getGrafico());
+    revisarColisionBloques(pelota);
 
-                                NodoPowerUp* nuevoNodo = new NodoPowerUp;
-
-                                nuevoNodo->powerUp = powerUp;
-                                nuevoNodo->anterior = nullptr;
-                                nuevoNodo->siguiente = inicio;
-
-                                if(inicio != nullptr){
-                                    inicio->anterior = nuevoNodo;
-                                }else{
-                                    fin=nuevoNodo;
-                                }
-
-                                inicio = nuevoNodo;
-                            }
-                            escena->removeItem(bloques[i][j].getGrafico());
-                            cantBloques--;
-                        }
-                        if(bloques[i][j].getTipoBloque()!=METALICO){
-                            puntos+=50;
-                        }
-                        actualizarBarra();
-                        verificarVictoria();
-                        return;
-                    }
-                }
-            }
-        }
+    pelotaActual=pelotaInicio;
+    while(pelotaActual!=nullptr){
+        NodoPelota* siguiente=pelotaActual->siguiente;
+        revisarColisionBloques(pelotaActual->pelota);
+        pelotaActual=siguiente;
     }
 }
 
@@ -275,6 +257,21 @@ void Juego::limpiarNivel(){
         }
     }
 
+    NodoPelota* pelotaActual=pelotaInicio;
+    NodoPowerUp* powerActual=inicio;
+
+    while(pelotaActual!=nullptr){
+        NodoPelota* siguiente=pelotaActual->siguiente;
+        eliminarPelota(pelotaActual);
+        pelotaActual=siguiente;
+    }
+
+    while(powerActual!=nullptr){
+        NodoPowerUp* siguiente=powerActual->siguiente;
+        eliminarPowerUp(powerActual);
+        powerActual=siguiente;
+    }
+
     escena->removeItem(txtVidas);
     escena->removeItem(txtPuntos);
     escena->removeItem(txtTiempo);
@@ -324,6 +321,7 @@ void Juego::activarPowerUp(Tipo tipo){
         break;
     }
     case PELOTA_EXTRA:{
+        crearPelotaExtra();
         break;
     }
     }
@@ -357,8 +355,11 @@ void Juego::eliminarPowerUp(NodoPowerUp* nodo) {
 
 void Juego::crearPelotaExtra(){
     Pelota* nuevaPelota = new Pelota();
+    /*if(pelota->getGrafico()->y()<580){
+        nuevaPelota->getGrafico()->setPos(pelota->getGrafico()->pos());
+    }*/
 
-    nuevaPelota->getGrafico()->setPos(pelota->getGrafico()->pos());
+    nuevaPelota->getGrafico()->setPos(paleta->getGrafico()->pos());
 
     escena->addItem(nuevaPelota->getGrafico());
 
@@ -378,9 +379,84 @@ void Juego::crearPelotaExtra(){
     pelotaInicio = nuevoNodo;
 }
 
-bool Juego::eventFilter(QObject* objeto, QEvent* evento)
-{
+void Juego::eliminarPelota(NodoPelota* nodo){
+    if(nodo->anterior == nullptr){
+        pelotaInicio = nodo->siguiente;
+    }else{
+        nodo->anterior->siguiente = nodo->siguiente;
+    }
 
+    if(nodo->siguiente == nullptr){
+        pelotaFin = nodo->anterior;
+    }else{
+        nodo->siguiente->anterior = nodo->anterior;
+    }
+
+    escena->removeItem(nodo->pelota->getGrafico());
+
+    delete nodo->pelota;
+    delete nodo;
+}
+
+void Juego::revisarColisionBloques(Pelota* p){
+    for(int i=0;i<FILAS;i++){
+        for(int j=0;j<COLUMNAS;j++){
+            if(bloques[i][j].getGrafico()!=nullptr){
+                if(!bloques[i][j].estaDestruido()){
+                    if(p->colisionaCon(bloques[i][j].getGrafico())){
+                        p->rebotarBloque(bloques[i][j].getGrafico());
+                        bloques[i][j].destruir();
+                        if(bloques[i][j].estaDestruido()){
+                            int tipo=bloques[i][j].getPowerUp();
+                            if(tipo!=0){
+                                PowerUp* powerUp;
+                                switch(tipo){
+                                case 1:
+                                    powerUp=new PowerUp(PALETA_LARGA);
+                                    break;
+                                case 2:
+                                    powerUp=new PowerUp(VELOCIDAD_EXTRA);
+                                    break;
+                                case 3:
+                                    powerUp=new PowerUp(VIDA_EXTRA);
+                                    break;
+                                default:
+                                    powerUp=new PowerUp(PELOTA_EXTRA);
+                                    break;
+                                }
+                                powerUp->getGrafico()->setPos(bloques[i][j].getGrafico()->sceneBoundingRect().center());
+                                escena->addItem(powerUp->getGrafico());
+
+                                NodoPowerUp* nuevoNodo=new NodoPowerUp;
+                                nuevoNodo->powerUp=powerUp;
+                                nuevoNodo->anterior=nullptr;
+                                nuevoNodo->siguiente=inicio;
+
+                                if(inicio!=nullptr){
+                                    inicio->anterior=nuevoNodo;
+                                }
+                                else{
+                                    fin=nuevoNodo;
+                                }
+                                inicio=nuevoNodo;
+                            }
+                            escena->removeItem(bloques[i][j].getGrafico());
+                            cantBloques--;
+                        }
+                        if(bloques[i][j].getTipoBloque()!=METALICO){
+                            puntos+=50;
+                        }
+                        actualizarBarra();
+                        verificarVictoria();
+                        return;
+                    }
+                }
+            }
+        }
+    }
+}
+
+bool Juego::eventFilter(QObject* objeto, QEvent* evento){
     if(vidas==0 || cantBloques==0){
         return QObject::eventFilter(objeto,evento);
     }

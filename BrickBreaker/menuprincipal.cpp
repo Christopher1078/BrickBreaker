@@ -1,6 +1,7 @@
 #include "menuprincipal.h"
 #include "menuinicio.h"
 #include "menuniveles.h"
+#include "pantallarecords.h"
 
 MenuPrincipal::MenuPrincipal(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manager) {
     QPixmap fondo(":/imagenes/menuprincipal.png");
@@ -33,8 +34,14 @@ MenuPrincipal::MenuPrincipal(QGraphicsScene* escena, QGraphicsView* vista, UserM
     btnRecords=new QPushButton(vista);
     btnRecords->setGeometry(270, 380, 285, 55);
     btnRecords->show();
-    connect(btnRecords, &QPushButton::clicked,this,[this](){
-
+    connect(btnRecords, &QPushButton::clicked,this,[this, escena, vista, manager](){
+        btnJugar->hide();
+        btnInstrucciones->hide();
+        btnRecords->hide();
+        btnCerrar->hide();
+        escena->clear();
+        vista->removeEventFilter(this);
+        pantallaRecords=new PantallaRecords(escena,vista,manager);
     });
 
     btnCerrar=new QPushButton(vista);

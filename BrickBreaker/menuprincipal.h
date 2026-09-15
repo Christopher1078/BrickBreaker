@@ -15,6 +15,7 @@
 
 class MenuInicio;
 class MenuNiveles;
+class PantallaRecords;
 
 class MenuPrincipal: public QObject
 {
@@ -29,6 +30,7 @@ private:
     QPushButton* btnCerrar;
     MenuInicio* menuInicio;
     MenuNiveles* menuNiveles;
+    PantallaRecords* pantallaRecords;
 };
 
 #endif // MENUPRINCIPAL_H

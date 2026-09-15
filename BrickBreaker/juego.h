@@ -79,6 +79,8 @@ protected:
     void activarPowerUp(Tipo tipo);
     void eliminarPowerUp(NodoPowerUp* nodo);
     void crearPelotaExtra();
+    void eliminarPelota(NodoPelota* nodo);
+    void revisarColisionBloques(Pelota* p);
 public:
     Juego(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manager);
     virtual ~Juego();

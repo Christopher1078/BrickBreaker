@@ -88,25 +88,21 @@ void Pelota::mover()
 void Pelota::comprobarParedes()
 {
 
-    if (grafico->x() <= 20)
-    {
+    if (grafico->x() <= 20){
         reflejar(QVector2D(1,0));
     }
 
-    if (grafico->x() >= 770)
-    {
+    if (grafico->x() >= 770){
         reflejar(QVector2D(-1,0));
     }
 
-    if (grafico->y()<= 20)
-    {
+    if (grafico->y()<= 20){
         reflejar(QVector2D(0,1));
     }
 
-    if (grafico->y() >= 590)
-    {
+    /*if (grafico->y() >= 590){
         reflejar(QVector2D(0,-1));
-    }
+    }*/
 
     if(grafico->x() > 770){
         grafico->setX(770);
