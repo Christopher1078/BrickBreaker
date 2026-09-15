@@ -25,8 +25,20 @@ Nivel3::Nivel3(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manage
                 break;
             }
             case 1:{
-                if(j==3 || j==4){
+                if(j==4 || j==3){
                     continue;
+                }
+                if(j==1){
+                    bloques[i][j].setMovil(130,300);
+                }
+                if(j==2){
+                    bloques[i][j].setMovil(220,390);
+                }
+                if(j==5){
+                    bloques[i][j].setMovil(410,580);
+                }
+                if(j==6){
+                    bloques[i][j].setMovil(500,670);
                 }
                 ruta=(":/imagenes/bloque_azul.png");
                 break;

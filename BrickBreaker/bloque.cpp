@@ -6,6 +6,7 @@ Bloque::Bloque(){
     destruido=false;
     powerUp=0;
     tipoBloque=NORMAL;
+    velocidad=3;
 }
 
 void Bloque::inicializar(float x,float y, std::string rutaImagen){
@@ -15,14 +16,18 @@ void Bloque::inicializar(float x,float y, std::string rutaImagen){
     case NORMAL:{
         imagen=QPixmap(rutaImagen.c_str());
         break;
+    }
     case BLINDADO:{
         imagen=QPixmap(":/imagenes/blindado_0.png");
         break;
     }
     case METALICO:{
         imagen=QPixmap(":/imagenes/metalico.png");
+        break;
     }
-    }
+    case MOVIL:
+        imagen=QPixmap(rutaImagen.c_str());
+        break;
     }
     imagen=imagen.scaled(75,45,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
     grafico = new QGraphicsPixmapItem(imagen);
@@ -33,13 +38,11 @@ Bloque::~Bloque(){
     delete grafico;
 }
 
-QGraphicsPixmapItem* Bloque::getGrafico()
-{
+QGraphicsPixmapItem* Bloque::getGrafico(){
     return grafico;
 }
 
-void Bloque::destruir()
-{
+void Bloque::destruir(){
     if(tipoBloque==METALICO){
         return;
     }
@@ -64,8 +67,7 @@ void Bloque::destruir()
     }
 }
 
-bool Bloque::estaDestruido()
-{
+bool Bloque::estaDestruido(){
     return destruido;
 }
 
@@ -78,6 +80,12 @@ void Bloque::setMetalico(){
     tipoBloque=METALICO;
 }
 
+void Bloque::setMovil(float limIzq, float limDer){
+    tipoBloque=MOVIL;
+    this->limIzq=limIzq;
+    this->limDer=limDer;
+}
+
 int Bloque::getPowerUp(){
     return powerUp;
 }
@@ -88,4 +96,18 @@ void Bloque::setPowerUp(int powerUp){
 
 TipoBloque Bloque::getTipoBloque(){
     return tipoBloque;
+}
+
+void Bloque::mover(){
+    if(tipoBloque!=MOVIL){
+        return;
+    }
+    grafico->moveBy(velocidad,0);
+    if(grafico->sceneBoundingRect().left() <= limIzq){
+        velocidad = -velocidad;
+    }
+
+    if(grafico->sceneBoundingRect().right() >= limDer){
+        velocidad = -velocidad;
+    }
 }

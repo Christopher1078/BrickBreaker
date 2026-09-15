@@ -46,7 +46,7 @@ PantallaVictoria::PantallaVictoria(QGraphicsScene* escena, QGraphicsView* vista,
     btnSiguiente->setGeometry(72,477,330,75);
     btnSiguiente->show();
     connect(btnSiguiente,&QPushButton::clicked,this,[this, escena, vista, nivel, manager](){
-        if(nivel!=5){
+        if(nivel!=4){
             btnSiguiente->hide();
             btnVolver->hide();
             escena->clear();

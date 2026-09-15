@@ -18,6 +18,9 @@ Nivel1::Nivel1(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manage
 
             switch(i){
             case 0:{
+                if(j==3 || j==2){
+                    bloques[i][j].setMovil(200,400);
+                }
                 ruta=(":/imagenes/bloque_morado.png");
                 break;
             }

@@ -12,6 +12,7 @@ private:
 
     float velocidadX;
     float velocidadY;
+    bool aumentado;
 
 public:
     Pelota();
@@ -25,7 +26,7 @@ public:
     bool colisionaCon(QGraphicsItem* objeto);
     void rebotarVertical();
     bool estaBajando();
-    void rebotarPaleta(float porcentaje);
+    void rebotarPaleta(QGraphicsItem* paleta);
     void rebotarBloque(QGraphicsItem* bloque);
     void reiniciarMovimiento();
     void aumentarVelocidad();

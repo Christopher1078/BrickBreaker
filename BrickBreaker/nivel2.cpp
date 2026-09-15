@@ -12,7 +12,7 @@ Nivel2::Nivel2(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manage
 
     for(int i=0;i<FILAS;i++){
         for(int j=0;j<COLUMNAS;j++){
-            float x=j*80+35;
+            float x=j*90+40;
             float y=i*50+40;
             std::string ruta;
 
@@ -38,7 +38,7 @@ Nivel2::Nivel2(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manage
             }
             case 2:{
                 if(j==4){
-                    //bloques[i][j].setPowerUp(2);
+                    bloques[i][j].setPowerUp(2);
                 }
                 ruta=(":/imagenes/bloque_verde.png");
                 break;

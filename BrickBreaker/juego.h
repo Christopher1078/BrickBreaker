@@ -20,8 +20,15 @@ class PantallaVictoria;
 class PantallaDerrota;
 
 struct NodoPowerUp{
-    PowerUp* powerUp;
-    NodoPowerUp* siguiente;
+    PowerUp* powerUp=nullptr;
+    NodoPowerUp* siguiente=nullptr;
+    NodoPowerUp* anterior=nullptr;
+};
+
+struct NodoPelota{
+    Pelota* pelota;
+    NodoPelota* siguiente;
+    NodoPelota* anterior;
 };
 
 class Juego : public QObject
@@ -45,6 +52,9 @@ protected:
     Paleta* paleta;
     Bloque** bloques;
     NodoPowerUp* inicio;
+    NodoPowerUp* fin;
+    NodoPelota* pelotaInicio;
+    NodoPelota* pelotaFin;
     int vidas;
     int puntos;
     int tiempo;
@@ -67,6 +77,8 @@ protected:
     void limpiarNivel();
     void calcularPuntaje(int &bonusTiempo, int &bonusVida, int &puntoFinal, int &estrellas);
     void activarPowerUp(Tipo tipo);
+    void eliminarPowerUp(NodoPowerUp* nodo);
+    void crearPelotaExtra();
 public:
     Juego(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manager);
     virtual ~Juego();

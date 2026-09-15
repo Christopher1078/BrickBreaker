@@ -30,6 +30,15 @@ Nivel4::Nivel4(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manage
                 break;
             }
             case 1:{
+                if(j==3 || j==4){
+                    continue;
+                }
+                if(j==2){
+                    bloques[i][j].setMovil(220,390);
+                }
+                if(j==5){
+                    bloques[i][j].setMovil(410,580);
+                }
                 ruta=(":/imagenes/bloque_azul.png");
                 break;
             }
@@ -38,14 +47,20 @@ Nivel4::Nivel4(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manage
                     bloques[i][j].setBlindado();
                 }
                 if(j==4){
-                    //bloques[i][j].setPowerUp(2);
+                    bloques[i][j].setPowerUp(2);
                 }
                 ruta=(":/imagenes/bloque_verde.png");
                 break;
             }
             case 3:{
                 if(j==2 || j==5){
-                    bloques[i][j].setBlindado();
+                    continue;
+                }
+                if(j==1){
+                    bloques[i][j].setMovil(130,300);
+                }
+                if(j==6){
+                    bloques[i][j].setMovil(500,670);
                 }
                 ruta=(":/imagenes/bloque_naranja.png");
                 break;

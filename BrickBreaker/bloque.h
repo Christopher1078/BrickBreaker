@@ -7,7 +7,8 @@
 enum TipoBloque{
     NORMAL,
     BLINDADO,
-    METALICO
+    METALICO,
+    MOVIL
 };
 
 class Bloque
@@ -18,6 +19,9 @@ private:
     int golpes;
     int powerUp;
     TipoBloque tipoBloque;
+    float velocidad;
+    float limIzq;
+    float limDer;
 
 public:
     Bloque();
@@ -29,9 +33,11 @@ public:
     void inicializar(float x, float y, std::string rutaImagen);
     void setBlindado();
     void setMetalico();
+    void setMovil(float limIzq, float limDer);
     int getPowerUp();
     void setPowerUp(int powerUp);
     TipoBloque getTipoBloque();
+    void mover();
 };
 
 #endif // BLOQUE_H

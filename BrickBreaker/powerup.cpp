@@ -24,7 +24,7 @@ PowerUp::PowerUp(Tipo tipo) {
         break;
     }
     }
-    imagen=imagen.scaled(20,20,Qt::IgnoreAspectRatio,Qt::FastTransformation);
+    imagen=imagen.scaled(30,30,Qt::IgnoreAspectRatio,Qt::FastTransformation);
     grafico = new QGraphicsPixmapItem(imagen);
     grafico->setPos(390, 500);
 
