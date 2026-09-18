@@ -6,7 +6,12 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
+find_package(Qt6 REQUIRED COMPONENTS
+    Core
+    Gui
+    Widgets
+    Multimedia
+)
 
 add_executable(BrickBreaker
     main.cpp
@@ -34,6 +39,10 @@ add_executable(BrickBreaker
     nivel5.h nivel5.cpp
     powerup.h powerup.cpp
     pantallarecords.h pantallarecords.cpp
+    audiomanager.h
+    audiomanager.cpp
+    music.h
+    music.cpp
 )
 
 qt_add_resources(BrickBreaker "recursos"
@@ -92,6 +101,8 @@ qt_add_resources(BrickBreaker "recursos"
 	imagenes/paleta_larga.png
 	imagenes/metalico.png
 	imagenes/Records.png
+ 	imagenes/musica.png
+	imagenes/mute_naranja.png
 )
 
 target_link_libraries(BrickBreaker
@@ -99,4 +110,25 @@ target_link_libraries(BrickBreaker
         Qt6::Core
         Qt6::Gui
         Qt6::Widgets
+	Qt6::Multimedia
+)
+
+add_custom_command(
+    TARGET BrickBreaker
+    POST_BUILD
+
+    COMMAND ${CMAKE_COMMAND} -E make_directory
+    "$<TARGET_FILE_DIR:BrickBreaker>/audio"
+
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    "${CMAKE_CURRENT_SOURCE_DIR}/audio/musica.mp3"
+    "$<TARGET_FILE_DIR:BrickBreaker>/audio/musica.mp3"
+
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    "${CMAKE_CURRENT_SOURCE_DIR}/audio/PowerUpSi.mpeg"
+    "$<TARGET_FILE_DIR:BrickBreaker>/audio/PowerUpSi.mpeg"
+
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    "${CMAKE_CURRENT_SOURCE_DIR}/audio/LifeLose.mp3"
+    "$<TARGET_FILE_DIR:BrickBreaker>/audio/LifeLose.mp3"
 )

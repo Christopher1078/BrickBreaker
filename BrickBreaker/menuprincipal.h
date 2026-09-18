@@ -4,33 +4,35 @@
 #include <QObject>
 #include <QGraphicsScene>
 #include <QGraphicsView>
-#include <QTimer>
-#include <QKeyEvent>
-#include <QEvent>
-#include <QColor>
-#include <qgraphicsitem.h>
 #include <QPushButton>
 
 #include "usermanager.h"
 
-class MenuInicio;
 class MenuNiveles;
 class PantallaRecords;
+class Music;
 
-class MenuPrincipal: public QObject
+class MenuPrincipal : public QObject
 {
     Q_OBJECT
+
 public:
-    MenuPrincipal(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manager);
+    MenuPrincipal( QGraphicsScene* escena,QGraphicsView* vista,UserManager* manager);
+
     ~MenuPrincipal();
+
 private:
+    void ocultarBotones();
+
     QPushButton* btnJugar;
     QPushButton* btnInstrucciones;
     QPushButton* btnRecords;
+    QPushButton* btnMusica;
     QPushButton* btnCerrar;
-    MenuInicio* menuInicio;
+
     MenuNiveles* menuNiveles;
     PantallaRecords* pantallaRecords;
+    Music* music;
 };
 
-#endif // MENUPRINCIPAL_H
+#endif

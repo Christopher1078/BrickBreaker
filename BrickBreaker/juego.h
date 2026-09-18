@@ -19,13 +19,15 @@ class UserManager;
 class PantallaVictoria;
 class PantallaDerrota;
 
-struct NodoPowerUp{
-    PowerUp* powerUp=nullptr;
-    NodoPowerUp* siguiente=nullptr;
-    NodoPowerUp* anterior=nullptr;
+struct NodoPowerUp
+{
+    PowerUp* powerUp = nullptr;
+    NodoPowerUp* siguiente = nullptr;
+    NodoPowerUp* anterior = nullptr;
 };
 
-struct NodoPelota{
+struct NodoPelota
+{
     Pelota* pelota;
     NodoPelota* siguiente;
     NodoPelota* anterior;
@@ -36,54 +38,101 @@ class Juego : public QObject
     Q_OBJECT
 
 protected:
-    const int FILAS=5;
-    const int COLUMNAS=8;
+    const int FILAS = 5;
+    const int COLUMNAS = 8;
+
     QGraphicsScene* escena;
     QGraphicsView* vista;
+
     UserManager* manager;
+
     QGraphicsTextItem* txtVidas;
     QGraphicsTextItem* txtPuntos;
     QGraphicsTextItem* txtTiempo;
+
     QGraphicsPixmapItem* corazones[4];
+
     PantallaVictoria* victoria;
     PantallaDerrota* derrota;
+
     QTimer* timer;
+
     Pelota* pelota;
     Paleta* paleta;
+
     Bloque** bloques;
+
     NodoPowerUp* inicio;
     NodoPowerUp* fin;
+
     NodoPelota* pelotaInicio;
     NodoPelota* pelotaFin;
+
     int vidas;
     int puntos;
     int tiempo;
     int frames;
     int cantBloques;
+
     int tiempoObjetivo;
     int bonusObjetivo;
     int nivel;
+
     int tiempoPaleta;
     int tiempoVeloz;
 
-    bool eventFilter(QObject* objeto, QEvent* evento) override;
+    bool eventFilter(
+        QObject* objeto,
+        QEvent* evento
+        ) override;
+
     void actualizar();
+
     void iniciarTimer();
+
     void crearBarraSuperior();
+
     void actualizarBarra();
+
     void perderVida();
+
     void reiniciarPelota();
+
     void verificarVictoria();
+
     void limpiarNivel();
-    void calcularPuntaje(int &bonusTiempo, int &bonusVida, int &puntoFinal, int &estrellas);
+
+    void calcularPuntaje(
+        int& bonusTiempo,
+        int& bonusVida,
+        int& puntoFinal,
+        int& estrellas
+        );
+
     void activarPowerUp(Tipo tipo);
-    void eliminarPowerUp(NodoPowerUp* nodo);
+
+    void eliminarPowerUp(
+        NodoPowerUp* nodo
+        );
+
     void crearPelotaExtra();
-    void eliminarPelota(NodoPelota* nodo);
-    void revisarColisionBloques(Pelota* p);
+
+    void eliminarPelota(
+        NodoPelota* nodo
+        );
+
+    void revisarColisionBloques(
+        Pelota* p
+        );
+
 public:
-    Juego(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manager);
+    Juego(
+        QGraphicsScene* escena,
+        QGraphicsView* vista,
+        UserManager* manager
+        );
+
     virtual ~Juego();
 };
 
-#endif // JUEGO_H
+#endif
