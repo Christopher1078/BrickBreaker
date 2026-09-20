@@ -39,7 +39,7 @@ Music::Music(
 
     btnMusicaMenos = new QPushButton(vista->viewport());
 
-    btnMusicaMenos->setGeometry(248,232,38,38);
+    btnMusicaMenos->setGeometry(265,190,38,38);
 
     btnMusicaMenos->setStyleSheet(transparente);
 
@@ -55,7 +55,7 @@ Music::Music(
     btnMusicaMas =
         new QPushButton(vista->viewport());
 
-    btnMusicaMas->setGeometry(516,232,39,38);
+    btnMusicaMas->setGeometry(510,190,38,38);
 
     btnMusicaMas->setStyleSheet(transparente);
 
@@ -73,7 +73,7 @@ Music::Music(
     btnEfectosMenos =
         new QPushButton(vista->viewport());
 
-    btnEfectosMenos->setGeometry(252,330,39,38);
+    btnEfectosMenos->setGeometry(265,310,38,38);
 
     btnEfectosMenos->setStyleSheet(
         transparente
@@ -93,12 +93,7 @@ Music::Music(
     btnEfectosMas =
         new QPushButton(vista->viewport());
 
-    btnEfectosMas->setGeometry(
-        516,
-        330,
-        39,
-        38
-        );
+    btnEfectosMas->setGeometry(510,310,38,38);
 
     btnEfectosMas->setStyleSheet(
         transparente
@@ -118,11 +113,7 @@ Music::Music(
     lblMusica =
         new QLabel(vista->viewport());
 
-    lblMusica->setGeometry(
-        565,
-        231,
-        63,
-        40
+    lblMusica->setGeometry(560,200,64,30
         );
 
     lblMusica->setAlignment(
@@ -131,10 +122,11 @@ Music::Music(
 
     lblMusica->setStyleSheet(
         "QLabel {"
-        "background: transparent;"
+        "background: rgb(0, 11, 56);"
         "color: #35DEFF;"
-        "font: bold 21px 'Courier New';"
+        "font: bold 18px 'Courier New';"
         "border: none;"
+        "border-radius: 3px;"
         "}"
         );
 
@@ -147,12 +139,7 @@ Music::Music(
 
     lblEfectos = new QLabel(vista->viewport());
 
-    lblEfectos->setGeometry(
-        565,
-        330,
-        63,
-        40
-        );
+    lblEfectos->setGeometry( 560,320, 64, 30 );
 
     lblEfectos->setAlignment(
         Qt::AlignCenter
@@ -160,10 +147,11 @@ Music::Music(
 
     lblEfectos->setStyleSheet(
         "QLabel {"
-        "background: transparent;"
+        "background: rgb(14, 1, 57);"
         "color: #FF54FA;"
-        "font: bold 21px 'Courier New';"
+        "font: bold 18px 'Courier New';"
         "border: none;"
+        "border-radius: 3px;"
         "}"
         );
 
@@ -177,8 +165,8 @@ Music::Music(
     btnMute =
         new QPushButton(vista->viewport());
 
-    btnMute->setGeometry(258,400,304,66
-        );
+    btnMute->setGeometry(260,382,280,60
+                         );
 
     btnMute->setCursor(
         Qt::PointingHandCursor
@@ -194,7 +182,7 @@ Music::Music(
     btnVolver =
         new QPushButton(vista->viewport());
 
-    btnVolver->setGeometry(262,464,288,56);
+    btnVolver->setGeometry(260,452,280,60);
 
     btnVolver->setStyleSheet(transparente);
 

@@ -11,6 +11,7 @@
 #include <qgraphicsitem.h>
 #include <QPushButton>
 #include <QWidget>
+#include <QString>
 
 #include "pelota.h"
 #include "paleta.h"
@@ -21,6 +22,7 @@ class UserManager;
 class PantallaVictoria;
 class PantallaDerrota;
 class MenuNiveles;
+class QLabel;
 
 struct NodoPowerUp
 {
@@ -63,8 +65,10 @@ protected:
     QWidget* menuPausa;
     QPushButton* btnRendirse;
     QPushButton* btnResumir;
+    QLabel* lblEspera;
     bool pausado;
     bool saliendoDelNivel;
+    bool esperandoInicio;
 
     Pelota* pelota;
     Paleta* paleta;
@@ -110,6 +114,10 @@ protected:
     void rendirse();
 
     void ocultarControlesPausa();
+
+    void mostrarEspera(const QString& mensaje);
+
+    void comenzarTrasEspera();
 
     void actualizarBarra();
 

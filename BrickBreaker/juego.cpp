@@ -31,8 +31,10 @@ Juego::Juego(QGraphicsScene* escena,QGraphicsView* vista,UserManager* manager){
     menuPausa = nullptr;
     btnRendirse = nullptr;
     btnResumir = nullptr;
+    lblEspera = nullptr;
     pausado = false;
     saliendoDelNivel = false;
+    esperandoInicio = false;
 
     vidas = 3;
     puntos = 0;
@@ -173,10 +175,26 @@ void Juego::crearMenuPausa(){
     connect(btnRendirse, &QPushButton::clicked, this, &Juego::rendirse);
 
     menuPausa->hide();
+
+    lblEspera = new QLabel(vista);
+    lblEspera->setGeometry(145, 245, 510, 125);
+    lblEspera->setAlignment(Qt::AlignCenter);
+    lblEspera->setWordWrap(true);
+    lblEspera->setStyleSheet(
+        "QLabel {"
+        "background-color: rgba(10, 10, 10, 225);"
+        "color: white;"
+        "border: 3px solid white;"
+        "border-radius: 16px;"
+        "font: bold 22px 'Courier New';"
+        "padding: 12px;"
+        "}"
+        );
+    lblEspera->hide();
 }
 
 void Juego::pausarJuego(){
-    if(pausado || saliendoDelNivel || vidas <= 0 || cantBloques == 0){
+    if(pausado || saliendoDelNivel || esperandoInicio || vidas <= 0 || cantBloques == 0){
         return;
     }
 
@@ -226,6 +244,7 @@ void Juego::rendirse(){
 
 void Juego::ocultarControlesPausa(){
     pausado = false;
+    esperandoInicio = false;
 
     if(btnPausa != nullptr){
         btnPausa->hide();
@@ -234,11 +253,56 @@ void Juego::ocultarControlesPausa(){
     if(menuPausa != nullptr){
         menuPausa->hide();
     }
+
+    if(lblEspera != nullptr){
+        lblEspera->hide();
+    }
+}
+
+void Juego::mostrarEspera(const QString& mensaje){
+    esperandoInicio = true;
+    timer->stop();
+
+    if(btnPausa != nullptr){
+        btnPausa->setEnabled(false);
+    }
+
+    if(menuPausa != nullptr){
+        menuPausa->hide();
+    }
+
+    if(lblEspera != nullptr){
+        lblEspera->setText(mensaje);
+        lblEspera->show();
+        lblEspera->raise();
+    }
+
+    vista->setFocus();
+}
+
+void Juego::comenzarTrasEspera(){
+    if(!esperandoInicio || saliendoDelNivel || vidas <= 0 || cantBloques == 0){
+        return;
+    }
+
+    esperandoInicio = false;
+
+    if(lblEspera != nullptr){
+        lblEspera->hide();
+    }
+
+    if(btnPausa != nullptr){
+        btnPausa->setEnabled(true);
+        btnPausa->show();
+    }
+
+    vista->setFocus();
+    timer->start(16);
 }
 
 void Juego::iniciarTimer(){
-    timer->start(16);
     vista->show();
+    mostrarEspera("PRESIONA W PARA COMENZAR");
 }
 
 void Juego::actualizar(){
@@ -427,7 +491,7 @@ void Juego::actualizarBarra()
 }
 
 void Juego::reiniciarPelota(){
-    pelota->getGrafico()->setPos(390,450);
+    pelota->getGrafico()->setPos(390,500);
 
     pelota->reiniciarMovimiento();
 
@@ -437,12 +501,17 @@ void Juego::reiniciarPelota(){
 void Juego::perderVida(){
     AudioManager::instancia().reproducirPerderVida();
 
+    timer->stop();
     vidas--;
 
     actualizarBarra();
 
     if(vidas <= 0){
-        timer->stop();
+        esperandoInicio = false;
+
+        if(lblEspera != nullptr){
+            lblEspera->hide();
+        }
 
         vista->removeEventFilter(this);
 
@@ -454,6 +523,7 @@ void Juego::perderVida(){
     }
 
     reiniciarPelota();
+    mostrarEspera("PERDISTE UNA VIDA\nPRESIONA W PARA CONTINUAR");
 }
 
 void Juego::verificarVictoria()
@@ -787,6 +857,21 @@ bool Juego::eventFilter(QObject* objeto,QEvent* evento){
         return QObject::eventFilter(objeto,evento);
     }
 
+    if(esperandoInicio){
+        if(evento->type() == QEvent::KeyPress){
+            QKeyEvent* tecla =static_cast<QKeyEvent*>(evento);
+
+            if(tecla->key() == Qt::Key_W && !tecla->isAutoRepeat()){
+                comenzarTrasEspera();
+            }
+
+            // Mientras espera la W no se permite mover la paleta con otras teclas.
+            return true;
+        }
+
+        return QObject::eventFilter(objeto,evento);
+    }
+
     if(evento->type() == QEvent::KeyPress){
         QKeyEvent* tecla =static_cast<QKeyEvent*>(evento);
 
@@ -795,8 +880,7 @@ bool Juego::eventFilter(QObject* objeto,QEvent* evento){
             return true;
         }
 
-        if(
-            tecla->key() == Qt::Key_Right || tecla->key() == Qt::Key_D){
+        if(tecla->key() == Qt::Key_Right || tecla->key() == Qt::Key_D){
             paleta->moverDerecha();
             return true;
         }
@@ -818,6 +902,9 @@ Juego::~Juego(){
     menuPausa = nullptr;
     btnResumir = nullptr;
     btnRendirse = nullptr;
+
+    delete lblEspera;
+    lblEspera = nullptr;
 
     delete pelota;
     pelota = nullptr;
