@@ -43,6 +43,8 @@ add_executable(BrickBreaker
     audiomanager.cpp
     music.h
     music.cpp
+    instrucciones.h
+    instrucciones.cpp
 )
 
 qt_add_resources(BrickBreaker "recursos"
@@ -101,6 +103,7 @@ qt_add_resources(BrickBreaker "recursos"
 	imagenes/paleta_larga.png
 	imagenes/metalico.png
 	imagenes/Records.png
+imagenes/instrucciones.png
  	imagenes/musica.png
 	imagenes/mute_naranja.png
 )

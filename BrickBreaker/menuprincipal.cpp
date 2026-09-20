@@ -4,19 +4,17 @@
 #include "pantallarecords.h"
 #include "music.h"
 
+#include "instrucciones.h"
 #include <QApplication>
 #include <QGraphicsPixmapItem>
 #include <QPixmap>
 
-MenuPrincipal::MenuPrincipal(
-    QGraphicsScene* escena,
-    QGraphicsView* vista,
-    UserManager* manager
-    )
+MenuPrincipal::MenuPrincipal(QGraphicsScene* escena,QGraphicsView* vista,UserManager* manager)
 {
     menuNiveles = nullptr;
     pantallaRecords = nullptr;
     music = nullptr;
+    instrucciones = nullptr;
 
     QPixmap fondo(
         ":/imagenes/menuprincipal.png"
@@ -94,12 +92,10 @@ MenuPrincipal::MenuPrincipal(
     btnInstrucciones->show();
 
     connect(
-        btnInstrucciones,
-        &QPushButton::clicked,
-        this,
-        [this]()
-        {
-
+        btnInstrucciones, &QPushButton::clicked,this,[this, escena, vista, manager]() {
+            ocultarBotones();escena->clear();
+vista->removeEventFilter(this);
+ instrucciones =new Instrucciones( escena, vista, manager );
         }
         );
 

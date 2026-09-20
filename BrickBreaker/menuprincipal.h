@@ -11,13 +11,14 @@
 class MenuNiveles;
 class PantallaRecords;
 class Music;
+class Instrucciones;
 
 class MenuPrincipal : public QObject
 {
     Q_OBJECT
 
 public:
-    MenuPrincipal( QGraphicsScene* escena,QGraphicsView* vista,UserManager* manager);
+    MenuPrincipal(QGraphicsScene* escena,QGraphicsView* vista, UserManager* manager );
 
     ~MenuPrincipal();
 
@@ -33,6 +34,7 @@ private:
     MenuNiveles* menuNiveles;
     PantallaRecords* pantallaRecords;
     Music* music;
+    Instrucciones* instrucciones;
 };
 
 #endif
