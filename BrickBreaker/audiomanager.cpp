@@ -11,27 +11,44 @@ AudioManager& AudioManager::instancia()
     return instanciaUnica;
 }
 
-AudioManager::AudioManager(QObject* parent)   : QObject(parent)
+AudioManager::AudioManager(QObject* parent)
+    : QObject(parent)
 {
     volumenMusica = 70;
     volumenEfectos = 80;
     muteado = false;
 
+
     musica = new QMediaPlayer(this);
     salidaMusica = new QAudioOutput(this);
     musica->setAudioOutput(salidaMusica);
+
 
     sonidoPowerUp = new QMediaPlayer(this);
     salidaPowerUp = new QAudioOutput(this);
     sonidoPowerUp->setAudioOutput(salidaPowerUp);
 
+
     sonidoVida = new QMediaPlayer(this);
     salidaVida = new QAudioOutput(this);
     sonidoVida->setAudioOutput(salidaVida);
 
+    sPaleta = new QMediaPlayer(this);
+    salidaPaleta = new QAudioOutput(this);
+
+    sPaleta->setAudioOutput(salidaPaleta);
+
+
+    sonidoRomperBloque = new QMediaPlayer(this);
+    salidaRomperBloque = new QAudioOutput(this);
+    sonidoRomperBloque->setAudioOutput(
+        salidaRomperBloque
+        );
+
     QString carpetaAudio =
         QCoreApplication::applicationDirPath()
         + "/audio/";
+
 
     musica->setSource(
         QUrl::fromLocalFile(
@@ -39,18 +56,20 @@ AudioManager::AudioManager(QObject* parent)   : QObject(parent)
             )
         );
 
+
     sonidoPowerUp->setSource(
         QUrl::fromLocalFile(
             carpetaAudio + "PowerUpSi.mpeg"
             )
         );
 
-    sonidoVida->setSource(
-        QUrl::fromLocalFile(
-            carpetaAudio + "LifeLose.mp3"
-            )
-        );
 
+    sonidoVida->setSource( QUrl::fromLocalFile(carpetaAudio + "LifeLose.mp3" ));
+
+
+    sonidoRomperBloque->setSource(QUrl::fromLocalFile(carpetaAudio + "block_break.wav"));
+
+    sPaleta->setSource(QUrl::fromLocalFile(carpetaAudio + "PaletaBounce.wav"));
     aplicarVolumenes();
 
     connect(
@@ -113,6 +132,25 @@ void AudioManager::reproducirPerderVida()
     sonidoVida->play();
 }
 
+void AudioManager::reproducirRomperBloque()
+{
+    if(muteado)
+    {
+        return;
+    }
+
+    if(volumenEfectos == 0)
+    {
+        return;
+    }
+
+    sonidoRomperBloque->stop();
+    sonidoRomperBloque->setPosition(0);
+    sonidoRomperBloque->play();
+}
+
+
+
 void AudioManager::subirMusica()
 {
     volumenMusica += 10;
@@ -168,6 +206,8 @@ void AudioManager::alternarMute()
     salidaMusica->setMuted(muteado);
     salidaPowerUp->setMuted(muteado);
     salidaVida->setMuted(muteado);
+    salidaRomperBloque->setMuted(muteado);
+    salidaPaleta->setMuted(muteado);
 }
 
 int AudioManager::getVolumenMusica() const
@@ -187,15 +227,29 @@ bool AudioManager::estaMuteado() const
 
 void AudioManager::aplicarVolumenes()
 {
-    salidaMusica->setVolume(
-        volumenMusica / 100.0
-        );
+    salidaMusica->setVolume(volumenMusica / 100.0);
 
-    salidaPowerUp->setVolume(
-        volumenEfectos / 100.0
-        );
+    salidaPowerUp->setVolume(volumenEfectos / 100.0 );
 
-    salidaVida->setVolume(
-        volumenEfectos / 100.0
-        );
+    salidaVida->setVolume(volumenEfectos / 100.0);
+
+    salidaRomperBloque->setVolume(volumenEfectos / 100.0);
+
+    salidaPaleta->setVolume( volumenEfectos / 100.0);
+}
+void AudioManager::reproducirRebote()
+{
+    if(muteado)
+    {
+        return;
+    }
+
+    if(volumenEfectos == 0)
+    {
+        return;
+    }
+
+    sPaleta->stop();
+    sPaleta->setPosition(0);
+    sPaleta->play();
 }

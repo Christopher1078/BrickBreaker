@@ -21,15 +21,9 @@ Music::Music(
 
     QPixmap fondo(":/imagenes/musica.png");
 
-    fondo = fondo.scaled(
-        800,
-        600,
-        Qt::IgnoreAspectRatio,
-        Qt::SmoothTransformation
-        );
+    fondo = fondo.scaled(800,600,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
 
-    QGraphicsPixmapItem* imagen =
-        escena->addPixmap(fondo);
+    QGraphicsPixmapItem* imagen =escena->addPixmap(fondo);
 
     imagen->setPos(0, 0);
     imagen->setZValue(-1);
@@ -43,23 +37,13 @@ Music::Music(
         "background: rgba(255,255,255,25);"
         "}";
 
-    btnMusicaMenos =
-        new QPushButton(vista->viewport());
+    btnMusicaMenos = new QPushButton(vista->viewport());
 
-    btnMusicaMenos->setGeometry(
-        248,
-        232,
-        38,
-        38
-        );
+    btnMusicaMenos->setGeometry(248,232,38,38);
 
-    btnMusicaMenos->setStyleSheet(
-        transparente
-        );
+    btnMusicaMenos->setStyleSheet(transparente);
 
-    btnMusicaMenos->setCursor(
-        Qt::PointingHandCursor
-        );
+    btnMusicaMenos->setCursor(Qt::PointingHandCursor );
 
     btnMusicaMenos->setFocusPolicy(
         Qt::NoFocus
@@ -71,16 +55,9 @@ Music::Music(
     btnMusicaMas =
         new QPushButton(vista->viewport());
 
-    btnMusicaMas->setGeometry(
-        516,
-        232,
-        39,
-        38
-        );
+    btnMusicaMas->setGeometry(516,232,39,38);
 
-    btnMusicaMas->setStyleSheet(
-        transparente
-        );
+    btnMusicaMas->setStyleSheet(transparente);
 
     btnMusicaMas->setCursor(
         Qt::PointingHandCursor
@@ -96,12 +73,7 @@ Music::Music(
     btnEfectosMenos =
         new QPushButton(vista->viewport());
 
-    btnEfectosMenos->setGeometry(
-        252,
-        330,
-        39,
-        38
-        );
+    btnEfectosMenos->setGeometry(252,330,39,38);
 
     btnEfectosMenos->setStyleSheet(
         transparente
@@ -173,8 +145,7 @@ Music::Music(
     lblMusica->show();
     lblMusica->raise();
 
-    lblEfectos =
-        new QLabel(vista->viewport());
+    lblEfectos = new QLabel(vista->viewport());
 
     lblEfectos->setGeometry(
         565,
@@ -206,11 +177,7 @@ Music::Music(
     btnMute =
         new QPushButton(vista->viewport());
 
-    btnMute->setGeometry(
-        258,
-        390,
-        304,
-        66
+    btnMute->setGeometry(258,400,304,66
         );
 
     btnMute->setCursor(
@@ -227,24 +194,13 @@ Music::Music(
     btnVolver =
         new QPushButton(vista->viewport());
 
-    btnVolver->setGeometry(
-        262,
-        464,
-        288,
-        56
-        );
+    btnVolver->setGeometry(262,464,288,56);
 
-    btnVolver->setStyleSheet(
-        transparente
-        );
+    btnVolver->setStyleSheet(transparente);
 
-    btnVolver->setCursor(
-        Qt::PointingHandCursor
-        );
+    btnVolver->setCursor( Qt::PointingHandCursor );
 
-    btnVolver->setFocusPolicy(
-        Qt::NoFocus
-        );
+    btnVolver->setFocusPolicy(Qt::NoFocus );
 
     btnVolver->show();
     btnVolver->raise();

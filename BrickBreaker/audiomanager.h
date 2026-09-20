@@ -16,7 +16,8 @@ public:
     void reproducirMusica();
     void reproducirPowerUp();
     void reproducirPerderVida();
-
+    void reproducirRomperBloque();
+    void reproducirRebote();
     void subirMusica();
     void bajarMusica();
 
@@ -46,6 +47,12 @@ private:
 
     QMediaPlayer* sonidoVida;
     QAudioOutput* salidaVida;
+
+    QMediaPlayer* sonidoRomperBloque;
+    QAudioOutput* salidaRomperBloque;
+
+    QMediaPlayer* sPaleta;
+    QAudioOutput* salidaPaleta;
 
     int volumenMusica;
     int volumenEfectos;

@@ -247,6 +247,8 @@ void Juego::actualizar()
                     paleta->getGrafico()
                     );
 
+            AudioManager::instancia().reproducirRebote();
+
             float nuevaY =
                 paleta->getGrafico()->y()
                 -
@@ -320,6 +322,8 @@ void Juego::actualizar()
         pelota->rebotarPaleta(
             paleta->getGrafico()
             );
+
+        AudioManager::instancia().reproducirRebote();
 
         float nuevaY =
             paleta->getGrafico()->y()
@@ -876,6 +880,9 @@ void Juego::revisarColisionBloques(
                                 .estaDestruido()
                             )
                         {
+                            AudioManager::instancia()
+                            .reproducirRomperBloque();
+
                             int tipo =
                                 bloques[i][j]
                                     .getPowerUp();

@@ -131,4 +131,12 @@ add_custom_command(
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
     "${CMAKE_CURRENT_SOURCE_DIR}/audio/LifeLose.mp3"
     "$<TARGET_FILE_DIR:BrickBreaker>/audio/LifeLose.mp3"
+
+ COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    "${CMAKE_CURRENT_SOURCE_DIR}/audio/block_break.wav"
+    "$<TARGET_FILE_DIR:BrickBreaker>/audio/block_break.wav"
+
+COMMAND ${CMAKE_COMMAND} -E copy_if_different
+"${CMAKE_CURRENT_SOURCE_DIR}/audio/PaletaBounce.wav"
+"$<TARGET_FILE_DIR:BrickBreaker>/audio/PaletaBounce.wav"
 )
