@@ -39,6 +39,12 @@ Nivel4::Nivel4(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manage
                 if(j==5){
                     bloques[i][j].setMovil(410,580);
                 }
+                if(j==3){
+                    bloques[i][j].setPowerUp(6);
+                }
+                if(j==4){
+                    bloques[i][j].setPowerUp(7);
+                }
                 ruta=(":/imagenes/bloque_azul.png");
                 break;
             }
@@ -48,6 +54,9 @@ Nivel4::Nivel4(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manage
                 }
                 if(j==4){
                     bloques[i][j].setPowerUp(2);
+                }
+                if(j==0){
+                    bloques[i][j].setPowerUp(5);
                 }
                 ruta=(":/imagenes/bloque_verde.png");
                 break;

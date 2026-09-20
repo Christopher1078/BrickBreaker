@@ -103,9 +103,12 @@ qt_add_resources(BrickBreaker "recursos"
 	imagenes/paleta_larga.png
 	imagenes/metalico.png
 	imagenes/Records.png
-imagenes/instrucciones.png
+	imagenes/instrucciones.png
  	imagenes/musica.png
 	imagenes/mute_naranja.png
+	imagenes/paleta_mini.png
+	imagenes/paleta_lenta.png
+	imagenes/pelota_lenta.png
 )
 
 target_link_libraries(BrickBreaker

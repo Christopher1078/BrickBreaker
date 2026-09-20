@@ -7,7 +7,10 @@ enum Tipo{
     PALETA_LARGA,
     VELOCIDAD_EXTRA,
     VIDA_EXTRA,
-    PELOTA_EXTRA
+    PELOTA_EXTRA,
+    PALETA_MINI,
+    PALETA_LENTA,
+    PELOTA_LENTA
 };
 
 class PowerUp: public QGraphicsPixmapItem

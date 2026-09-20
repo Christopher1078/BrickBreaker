@@ -13,6 +13,7 @@ private:
     float velocidadX;
     float velocidadY;
     bool aumentado;
+    bool ralentizado;
 
 public:
     Pelota();
@@ -31,6 +32,7 @@ public:
     void reiniciarMovimiento();
     void aumentarVelocidad();
     void disminuirVelocidad();
+    void ralentalizar();
 };
 
 #endif // PELOTA_H

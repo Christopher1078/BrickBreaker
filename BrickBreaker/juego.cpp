@@ -5,18 +5,16 @@
 #include "usermanager.h"
 #include "audiomanager.h"
 
-Juego::Juego(
-    QGraphicsScene* escena,
-    QGraphicsView* vista,
-    UserManager* manager
-    )
-{
+Juego::Juego(QGraphicsScene* escena,QGraphicsView* vista,UserManager* manager){
     this->escena = escena;
     this->vista = vista;
     this->manager = manager;
 
     tiempoPaleta = 0;
     tiempoVeloz = 0;
+    tiempoLento = 0;
+    tiempoRalentizado = 0;
+    tiempoMini=0;
 
     inicio = nullptr;
     fin = nullptr;
@@ -30,19 +28,11 @@ Juego::Juego(
     frames = 0;
     cantBloques = 0;
 
-    QPixmap fondo(
-        ":/imagenes/fondo.png"
-        );
+    QPixmap fondo(":/imagenes/fondo.png");
 
-    fondo = fondo.scaled(
-        800,
-        600,
-        Qt::IgnoreAspectRatio,
-        Qt::SmoothTransformation
-        );
+    fondo = fondo.scaled(800,600,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
 
-    QGraphicsPixmapItem* imagen =
-        escena->addPixmap(fondo);
+    QGraphicsPixmapItem* imagen =escena->addPixmap(fondo);
 
     imagen->setZValue(-1);
     imagen->setPos(0, 0);
@@ -57,213 +47,160 @@ Juego::Juego(
     pelota = new Pelota();
     paleta = new Paleta();
 
-    escena->addItem(
-        pelota->getGrafico()
-        );
+    escena->addItem(pelota->getGrafico());
 
-    escena->addItem(
-        paleta->getGrafico()
-        );
+    escena->addItem(paleta->getGrafico());
 
     timer = new QTimer;
 
-    QObject::connect(
-        timer,
-        &QTimer::timeout,
-        this,
-        &Juego::actualizar
-        );
+    QObject::connect(timer,&QTimer::timeout,this,&Juego::actualizar);
 }
 
-void Juego::crearBarraSuperior()
-{
-    txtVidas =
-        escena->addText("VIDAS: ");
+void Juego::crearBarraSuperior(){
+    txtVidas =escena->addText("VIDAS: ");
 
-    for(int i = 0; i < 3; i++)
-    {
-        QPixmap imagen(
-            ":/imagenes/corazon.png"
-            );
+    for(int i = 0; i < 3; i++){
+        QPixmap imagen(":/imagenes/corazon.png");
 
-        imagen = imagen.scaled(
-            30,
-            30,
-            Qt::KeepAspectRatio,
-            Qt::SmoothTransformation
-            );
+        imagen = imagen.scaled(30,30,Qt::KeepAspectRatio,Qt::SmoothTransformation);
 
-        corazones[i] =
-            escena->addPixmap(imagen);
+        corazones[i] =escena->addPixmap(imagen);
 
-        corazones[i]->setPos(
-            100 + i * 40,
-            10
-            );
+        corazones[i]->setPos(100 + i * 40,10);
     }
 
-    txtPuntos =
-        escena->addText(
-            "PUNTOS: 000000"
-            );
+    txtPuntos =escena->addText("PUNTOS: 000000");
 
-    txtTiempo =
-        escena->addText(
-            "TIEMPO: 00:00"
-            );
+    txtTiempo =escena->addText("TIEMPO: 00:00");
 
-    QFont fuente(
-        "Courier New",
-        14,
-        QFont::Bold
-        );
+    QFont fuente("Courier New",14,QFont::Bold);
 
     txtVidas->setFont(fuente);
-    txtVidas->setDefaultTextColor(
-        Qt::white
-        );
+    txtVidas->setDefaultTextColor(Qt::white);
     txtVidas->setPos(30, 10);
 
     txtPuntos->setFont(fuente);
-    txtPuntos->setDefaultTextColor(
-        Qt::white
-        );
+    txtPuntos->setDefaultTextColor(Qt::white);
     txtPuntos->setPos(330, 10);
 
     txtTiempo->setFont(fuente);
-    txtTiempo->setDefaultTextColor(
-        Qt::white
-        );
+    txtTiempo->setDefaultTextColor(Qt::white);
     txtTiempo->setPos(630, 10);
 }
 
-void Juego::iniciarTimer()
-{
+void Juego::iniciarTimer(){
     timer->start(16);
     vista->show();
 }
 
-void Juego::actualizar()
-{
+void Juego::actualizar(){
     frames++;
 
-    if(frames >= 60)
-    {
+    if(frames >= 60){
         tiempo++;
         frames = 0;
 
-        if(tiempoPaleta > 0)
-        {
+        if(tiempoPaleta > 0){
             tiempoPaleta--;
 
-            if(tiempoPaleta == 0)
-            {
+            if(tiempoPaleta == 0){
                 paleta->hacerNormal();
             }
         }
 
-        if(tiempoVeloz > 0)
-        {
+        if(tiempoVeloz > 0){
             tiempoVeloz--;
 
-            if(tiempoVeloz == 0)
-            {
+            if(tiempoVeloz == 0){
                 pelota->disminuirVelocidad();
+                NodoPelota* actual=pelotaInicio;
+                while(actual!=nullptr){
+                    actual->pelota->disminuirVelocidad();
+                    actual=actual->siguiente;
+                }
             }
         }
 
+        if(tiempoMini > 0){
+            tiempoMini--;
+
+            if(tiempoMini == 0){
+                paleta->hacerNormal();
+            }
+        }
+
+        if(tiempoLento > 0){
+            tiempoLento--;
+
+            if(tiempoLento == 0){
+                paleta->derralentizar();
+            }
+        }
+
+        if(tiempoRalentizado > 0){
+            tiempoRalentizado--;
+            if(tiempoRalentizado == 0){
+                pelota->disminuirVelocidad();
+                NodoPelota* actual=pelotaInicio;
+                while(actual!=nullptr){
+                    actual->pelota->disminuirVelocidad();
+                    actual=actual->siguiente;
+                }
+            }
+        }
         actualizarBarra();
     }
 
     pelota->mover();
     pelota->comprobarParedes();
 
-    NodoPelota* pelotaActual =
-        pelotaInicio;
+    NodoPelota* pelotaActual =pelotaInicio;
 
-    while(pelotaActual != nullptr)
-    {
+    while(pelotaActual != nullptr){
         pelotaActual->pelota->mover();
 
-        pelotaActual =
-            pelotaActual->siguiente;
+        pelotaActual =pelotaActual->siguiente;
     }
 
     pelotaActual = pelotaInicio;
 
-    while(pelotaActual != nullptr)
-    {
-        pelotaActual->pelota
-            ->comprobarParedes();
+    while(pelotaActual != nullptr){
+        pelotaActual->pelota->comprobarParedes();
 
-        pelotaActual =
-            pelotaActual->siguiente;
+        pelotaActual =pelotaActual->siguiente;
     }
 
     pelotaActual = pelotaInicio;
 
-    while(pelotaActual != nullptr)
-    {
-        NodoPelota* siguiente =
-            pelotaActual->siguiente;
+    while(pelotaActual != nullptr){
+        NodoPelota* siguiente =pelotaActual->siguiente;
 
-        if(
-            pelotaActual->pelota
-                ->getGrafico()
-                ->y() > 585
-            )
-        {
-            eliminarPelota(
-                pelotaActual
-                );
+        if(pelotaActual->pelota->getGrafico()->y() > 585){
+            eliminarPelota(pelotaActual);
         }
 
         pelotaActual = siguiente;
     }
 
-    if(
-        pelota->getGrafico()->y() > 585
-        &&
-        pelotaInicio == nullptr
-        )
-    {
+    if(pelota->getGrafico()->y() > 585 && pelotaInicio == nullptr){
         perderVida();
         return;
     }
 
     pelotaActual = pelotaInicio;
 
-    while(pelotaActual != nullptr)
-    {
-        if(
-            pelotaActual->pelota
-                ->colisionaCon(
-                    paleta->getGrafico()
-                    )
-            )
-        {
-            pelotaActual->pelota
-                ->rebotarPaleta(
-                    paleta->getGrafico()
-                    );
+    while(pelotaActual != nullptr){
+        if(pelotaActual->pelota->colisionaCon(paleta->getGrafico())){
+            pelotaActual->pelota->rebotarPaleta(paleta->getGrafico());
 
             AudioManager::instancia().reproducirRebote();
 
-            float nuevaY =
-                paleta->getGrafico()->y()
-                -
-                pelotaActual->pelota
-                    ->getGrafico()
-                    ->boundingRect()
-                    .height();
+            float nuevaY = paleta->getGrafico()->y()-pelotaActual->pelota->getGrafico()->boundingRect().height();
 
-            pelotaActual->pelota
-                ->getGrafico()
-                ->setY(nuevaY);
+            pelotaActual->pelota->getGrafico()->setY(nuevaY);
         }
 
-        pelotaActual =
-            pelotaActual->siguiente;
+        pelotaActual =pelotaActual->siguiente;
     }
 
     NodoPowerUp* actual = inicio;
@@ -272,15 +209,9 @@ void Juego::actualizar()
     {
         actual->powerUp->mover();
 
-        NodoPowerUp* siguiente =
-            actual->siguiente;
+        NodoPowerUp* siguiente =actual->siguiente;
 
-        if(
-            actual->powerUp
-                ->getGrafico()
-                ->y() > 590
-            )
-        {
+        if(actual->powerUp->getGrafico()->y() > 590){
             eliminarPowerUp(actual);
         }
 
@@ -289,23 +220,11 @@ void Juego::actualizar()
 
     actual = inicio;
 
-    while(actual != nullptr)
-    {
-        NodoPowerUp* siguiente =
-            actual->siguiente;
+    while(actual != nullptr){
+        NodoPowerUp* siguiente =actual->siguiente;
 
-        if(
-            actual->powerUp
-                ->getGrafico()
-                ->collidesWithItem(
-                    paleta->getGrafico()
-                    )
-            )
-        {
-            activarPowerUp(
-                actual->powerUp
-                    ->getTipo()
-                );
+        if(actual->powerUp->getGrafico()->collidesWithItem(paleta->getGrafico())){
+            activarPowerUp(actual->powerUp->getTipo());
 
             eliminarPowerUp(actual);
         }
@@ -313,43 +232,26 @@ void Juego::actualizar()
         actual = siguiente;
     }
 
-    if(
-        pelota->colisionaCon(
-            paleta->getGrafico()
-            )
-        )
-    {
-        pelota->rebotarPaleta(
-            paleta->getGrafico()
-            );
+    if(pelota->colisionaCon(paleta->getGrafico())){
+        pelota->rebotarPaleta(paleta->getGrafico());
 
         AudioManager::instancia().reproducirRebote();
 
         float nuevaY =
-            paleta->getGrafico()->y()
-            -
-            pelota->getGrafico()
-                ->boundingRect()
-                .height();
+            paleta->getGrafico()->y()-pelota->getGrafico()->boundingRect().height();
 
-        pelota->getGrafico()
-            ->setY(nuevaY);
+        pelota->getGrafico()->setY(nuevaY);
     }
 
-    revisarColisionBloques(
-        pelota
-        );
+    revisarColisionBloques(pelota);
 
     pelotaActual = pelotaInicio;
 
     while(pelotaActual != nullptr)
     {
-        NodoPelota* siguiente =
-            pelotaActual->siguiente;
+        NodoPelota* siguiente =pelotaActual->siguiente;
 
-        revisarColisionBloques(
-            pelotaActual->pelota
-            );
+        revisarColisionBloques(pelotaActual->pelota);
 
         pelotaActual = siguiente;
     }
@@ -357,99 +259,48 @@ void Juego::actualizar()
 
 void Juego::actualizarBarra()
 {
-    txtVidas->setPlainText(
-        "VIDAS: "
-        );
+    txtVidas->setPlainText("VIDAS: ");
 
-    for(int i = 0; i < 3; i++)
-    {
-        if(i < vidas)
-        {
-            corazones[i]
-                ->setVisible(true);
+    for(int i = 0; i < 3; i++){
+        if(i < vidas){
+            corazones[i]->setVisible(true);
         }
-        else
-        {
-            corazones[i]
-                ->setVisible(false);
+        else{
+            corazones[i]->setVisible(false);
         }
     }
 
-    txtPuntos->setPlainText(
-        "PUNTOS: "
-        +
-        QString("%1").arg(
-            puntos,
-            6,
-            10,
-            QChar('0')
-            )
-        );
+    txtPuntos->setPlainText("PUNTOS: "+QString("%1").arg(puntos,6,10,QChar('0')));
 
     int minutos = tiempo / 60;
     int segundos = tiempo % 60;
 
-    txtTiempo->setPlainText(
-        QString(
-            "TIEMPO: %1:%2"
-            )
-            .arg(
-                minutos,
-                2,
-                10,
-                QChar('0')
-                )
-            .arg(
-                segundos,
-                2,
-                10,
-                QChar('0')
-                )
-        );
+    txtTiempo->setPlainText(QString("TIEMPO: %1:%2").arg(minutos,2,10,QChar('0')).arg(segundos,2,10,QChar('0')));
 }
 
-void Juego::reiniciarPelota()
-{
-    pelota->getGrafico()
-    ->setPos(
-        390,
-        450
-        );
+void Juego::reiniciarPelota(){
+    pelota->getGrafico()->setPos(390,450);
 
     pelota->reiniciarMovimiento();
 
     paleta->reiniciar();
 }
 
-void Juego::perderVida()
-{
-    AudioManager::instancia()
-    .reproducirPerderVida();
+void Juego::perderVida(){
+    AudioManager::instancia().reproducirPerderVida();
 
     vidas--;
 
     actualizarBarra();
 
-    if(vidas <= 0)
-    {
+    if(vidas <= 0){
         timer->stop();
 
-        vista->removeEventFilter(
-            this
-            );
+        vista->removeEventFilter(this);
 
         limpiarNivel();
 
-        derrota =
-            new PantallaDerrota(
-                escena,
-                vista,
-                manager,
-                puntos,
-                tiempo,
-                cantBloques,
-                nivel
-                );
+        derrota =new PantallaDerrota(escena,vista,manager,puntos,tiempo,cantBloques,nivel);
 
         return;
     }
@@ -459,8 +310,7 @@ void Juego::perderVida()
 
 void Juego::verificarVictoria()
 {
-    if(cantBloques == 0)
-    {
+    if(cantBloques == 0){
         int bonusTiempo;
         int bonusVidas;
         int puntoFinal;
@@ -468,134 +318,59 @@ void Juego::verificarVictoria()
 
         timer->stop();
 
-        calcularPuntaje(
-            bonusTiempo,
-            bonusVidas,
-            puntoFinal,
-            estrellas
-            );
+        calcularPuntaje(bonusTiempo,bonusVidas,puntoFinal,estrellas);
 
-        manager
-            ->getActual()
-            ->setEstrellas(
-                estrellas,
-                nivel
-                );
+        manager->getActual()->setEstrellas(estrellas,nivel);
 
-        manager
-            ->getActual()
-            ->setMejorPuntaje(
-                puntoFinal,
-                nivel
-                );
+        manager ->getActual() ->setMejorPuntaje(puntoFinal,nivel);
 
-        if(
-            nivel < 4
-            &&
-            !manager
-                 ->getActual()
-                 ->isPasado(nivel + 1)
-            )
-        {
-            manager
-                ->getActual()
-                ->pasarNivel();
+        if(nivel < 4 && !manager->getActual()->isPasado(nivel + 1)){
+            manager->getActual()->pasarNivel();
         }
 
         manager->guardarArreglo();
 
-        vista->removeEventFilter(
-            this
-            );
+        vista->removeEventFilter(this);
 
         limpiarNivel();
 
-        victoria =
-            new PantallaVictoria(
-                escena,
-                vista,
-                manager,
-                puntoFinal,
-                puntos,
-                bonusTiempo,
-                bonusVidas,
-                estrellas,
-                nivel
-                );
+        victoria =new PantallaVictoria(escena,vista,manager,puntoFinal,puntos,bonusTiempo,bonusVidas,estrellas,nivel);
     }
 }
 
-void Juego::limpiarNivel()
-{
-    if(
-        pelota != nullptr
-        &&
-        pelota->getGrafico() != nullptr
-        )
-    {
-        escena->removeItem(
-            pelota->getGrafico()
-            );
+void Juego::limpiarNivel(){
+    if(pelota != nullptr && pelota->getGrafico() != nullptr){
+        escena->removeItem(pelota->getGrafico());
     }
 
-    if(
-        paleta != nullptr
-        &&
-        paleta->getGrafico() != nullptr
-        )
-    {
-        escena->removeItem(
-            paleta->getGrafico()
-            );
+    if(paleta != nullptr && paleta->getGrafico() != nullptr){
+        escena->removeItem(paleta->getGrafico());
     }
 
-    for(int i = 0; i < FILAS; i++)
-    {
-        for(int j = 0; j < COLUMNAS; j++)
-        {
-            if(
-                bloques[i][j]
-                        .getGrafico()
-                    != nullptr
-                &&
-                !bloques[i][j]
-                     .estaDestruido()
-                )
-            {
-                escena->removeItem(
-                    bloques[i][j]
-                        .getGrafico()
-                    );
+    for(int i = 0; i < FILAS; i++){
+        for(int j = 0; j < COLUMNAS; j++){
+            if(bloques[i][j].getGrafico()!= nullptr && !bloques[i][j].estaDestruido()){
+                escena->removeItem(bloques[i][j].getGrafico());
             }
         }
     }
 
-    NodoPelota* pelotaActual =
-        pelotaInicio;
+    NodoPelota* pelotaActual = pelotaInicio;
 
-    NodoPowerUp* powerActual =
-        inicio;
+    NodoPowerUp* powerActual =inicio;
 
-    while(pelotaActual != nullptr)
-    {
-        NodoPelota* siguiente =
-            pelotaActual->siguiente;
+    while(pelotaActual != nullptr){
+        NodoPelota* siguiente =pelotaActual->siguiente;
 
-        eliminarPelota(
-            pelotaActual
-            );
+        eliminarPelota(pelotaActual);
 
         pelotaActual = siguiente;
     }
 
-    while(powerActual != nullptr)
-    {
-        NodoPowerUp* siguiente =
-            powerActual->siguiente;
+    while(powerActual != nullptr){
+        NodoPowerUp* siguiente =powerActual->siguiente;
 
-        eliminarPowerUp(
-            powerActual
-            );
+        eliminarPowerUp(powerActual);
 
         powerActual = siguiente;
     }
@@ -604,156 +379,116 @@ void Juego::limpiarNivel()
     escena->removeItem(txtPuntos);
     escena->removeItem(txtTiempo);
 
-    for(int i = 0; i < 3; i++)
-    {
-        escena->removeItem(
-            corazones[i]
-            );
+    for(int i = 0; i < 3; i++){
+        escena->removeItem(corazones[i]);
     }
 }
 
-void Juego::calcularPuntaje(
-    int& bonusTiempo,
-    int& bonusVidas,
-    int& puntoFinal,
-    int& estrellas
-    )
+void Juego::calcularPuntaje(int& bonusTiempo,int& bonusVidas,int& puntoFinal,int& estrellas)
 {
-    bonusTiempo =
-        (tiempoObjetivo - tiempo)
-        * 10;
+    bonusTiempo =(tiempoObjetivo - tiempo)* 10;
 
-    if(bonusTiempo < 0)
-    {
+    if(bonusTiempo < 0){
         bonusTiempo = 0;
     }
 
-    bonusVidas =
-        (vidas - 1)
-        * 500;
+    bonusVidas =(vidas - 1)* 500;
 
-    if(vidas == 0)
-    {
+    if(vidas == 0){
         bonusVidas = 0;
     }
 
-    estrellas =
-        (
-            (
-                bonusTiempo
-                +
-                bonusVidas
-                )
-            * 3
-            )
-        /
-        bonusObjetivo;
+    estrellas =((bonusTiempo+bonusVidas)* 3)/bonusObjetivo;
 
-    if(estrellas > 3)
-    {
+    if(estrellas > 3){
         estrellas = 3;
     }
 
-    puntoFinal =
-        puntos
-        +
-        bonusTiempo
-        +
-        bonusVidas;
+    puntoFinal =puntos + bonusTiempo + bonusVidas;
 }
 
-void Juego::activarPowerUp(
-    Tipo tipo
-    )
-{
-    AudioManager::instancia()
-    .reproducirPowerUp();
+void Juego::activarPowerUp(Tipo tipo){
+    AudioManager::instancia().reproducirPowerUp();
 
-    switch(tipo)
-    {
-    case PALETA_LARGA:
-    {
+    switch(tipo){
+    case PALETA_LARGA:{
         paleta->hacerGrande();
-
         tiempoPaleta = 10;
-
         break;
     }
 
-    case VELOCIDAD_EXTRA:
-    {
-        pelota
-            ->aumentarVelocidad();
-
+    case VELOCIDAD_EXTRA:{
+        pelota->aumentarVelocidad();
+        NodoPelota* actual=pelotaInicio;
+        while(actual!=nullptr){
+            actual->pelota->aumentarVelocidad();
+            actual=actual->siguiente;
+        }
         tiempoVeloz = 10;
-
         break;
     }
 
-    case VIDA_EXTRA:
-    {
-        if(vidas != 3)
-        {
+    case VIDA_EXTRA:{
+        if(vidas != 3){
             vidas++;
-
             actualizarBarra();
         }
-
         break;
     }
 
-    case PELOTA_EXTRA:
-    {
+    case PELOTA_EXTRA:{
         crearPelotaExtra();
+        break;
+    }
 
+    case PELOTA_LENTA:{
+        pelota->ralentalizar();
+        NodoPelota* actual=pelotaInicio;
+        while(actual!=nullptr){
+            actual->pelota->ralentalizar();
+            actual=actual->siguiente;
+        }
+        tiempoRalentizado = 10;
+        break;
+    }
+
+    case PALETA_LENTA:{
+        paleta->ralentizar();
+        tiempoLento=10;
+        break;
+    }
+
+    case PALETA_MINI:{
+        paleta->hacerMini();
+        tiempoMini=10;
         break;
     }
     }
 }
 
-void Juego::eliminarPowerUp(
-    NodoPowerUp* nodo
-    )
+void Juego::eliminarPowerUp(NodoPowerUp* nodo)
 {
-    if(nodo == nullptr)
-    {
+    if(nodo == nullptr){
         return;
     }
 
-    if(nodo->anterior != nullptr)
-    {
-        nodo->anterior->siguiente =
-            nodo->siguiente;
+    if(nodo->anterior != nullptr){
+        nodo->anterior->siguiente =nodo->siguiente;
     }
-    else
-    {
-        inicio =
-            nodo->siguiente;
+    else{
+        inicio =nodo->siguiente;
     }
 
-    if(nodo->siguiente != nullptr)
-    {
-        nodo->siguiente->anterior =
-            nodo->anterior;
+    if(nodo->siguiente != nullptr){
+        nodo->siguiente->anterior =nodo->anterior;
     }
-    else
-    {
-        fin =
-            nodo->anterior;
+    else{
+        fin =nodo->anterior;
     }
 
-    if(nodo->powerUp != nullptr)
-    {
-        if(
-            nodo->powerUp
-                ->getGrafico()
-            != nullptr
-            )
-        {
-            escena->removeItem(
-                nodo->powerUp
-                    ->getGrafico()
-                );
+    if(nodo->powerUp != nullptr){
+        if(nodo->powerUp->getGrafico()!= nullptr){
+            escena->removeItem(nodo->powerUp->getGrafico());
         }
 
         delete nodo->powerUp;
@@ -762,221 +497,122 @@ void Juego::eliminarPowerUp(
     delete nodo;
 }
 
-void Juego::crearPelotaExtra()
-{
-    Pelota* nuevaPelota =
-        new Pelota();
+void Juego::crearPelotaExtra(){
+    Pelota* nuevaPelota =new Pelota();
 
-    nuevaPelota
-        ->getGrafico()
-        ->setPos(
-            paleta
-                ->getGrafico()
-                ->pos()
-            );
+    nuevaPelota->getGrafico()->setPos(paleta->getGrafico()->pos());
 
-    escena->addItem(
-        nuevaPelota->getGrafico()
-        );
+    escena->addItem(nuevaPelota->getGrafico());
 
-    NodoPelota* nuevoNodo =
-        new NodoPelota;
+    NodoPelota* nuevoNodo =new NodoPelota;
 
-    nuevoNodo->pelota =
-        nuevaPelota;
+    nuevoNodo->pelota =nuevaPelota;
 
-    nuevoNodo->anterior =
-        nullptr;
+    nuevoNodo->anterior =nullptr;
 
-    nuevoNodo->siguiente =
-        pelotaInicio;
+    nuevoNodo->siguiente =pelotaInicio;
 
-    if(pelotaInicio != nullptr)
-    {
-        pelotaInicio->anterior =
-            nuevoNodo;
+    if(pelotaInicio != nullptr){
+        pelotaInicio->anterior =nuevoNodo;
     }
-    else
-    {
-        pelotaFin =
-            nuevoNodo;
+    else{
+        pelotaFin =nuevoNodo;
     }
 
-    pelotaInicio =
-        nuevoNodo;
+    pelotaInicio =nuevoNodo;
 }
 
-void Juego::eliminarPelota(
-    NodoPelota* nodo
-    )
-{
-    if(nodo->anterior == nullptr)
-    {
-        pelotaInicio =
-            nodo->siguiente;
+void Juego::eliminarPelota(NodoPelota* nodo){
+    if(nodo->anterior == nullptr){
+        pelotaInicio =nodo->siguiente;
     }
-    else
-    {
-        nodo->anterior->siguiente =
-            nodo->siguiente;
+    else{
+        nodo->anterior->siguiente =nodo->siguiente;
     }
 
-    if(nodo->siguiente == nullptr)
-    {
-        pelotaFin =
-            nodo->anterior;
+    if(nodo->siguiente == nullptr){
+        pelotaFin =nodo->anterior;
     }
-    else
-    {
-        nodo->siguiente->anterior =
-            nodo->anterior;
+    else{
+        nodo->siguiente->anterior =nodo->anterior;
     }
 
-    escena->removeItem(
-        nodo->pelota
-            ->getGrafico()
-        );
+    escena->removeItem(nodo->pelota->getGrafico());
 
     delete nodo->pelota;
     delete nodo;
 }
 
-void Juego::revisarColisionBloques(
-    Pelota* p
-    )
-{
-    for(int i = 0; i < FILAS; i++)
-    {
-        for(int j = 0; j < COLUMNAS; j++)
-        {
-            if(
-                bloques[i][j]
-                    .getGrafico()
-                != nullptr
-                )
-            {
-                if(
-                    !bloques[i][j]
-                         .estaDestruido()
-                    )
-                {
-                    if(
-                        p->colisionaCon(
-                            bloques[i][j]
-                                .getGrafico()
-                            )
-                        )
-                    {
-                        p->rebotarBloque(
-                            bloques[i][j]
-                                .getGrafico()
-                            );
+void Juego::revisarColisionBloques(Pelota* p){
+    for(int i = 0; i < FILAS; i++){
+        for(int j = 0; j < COLUMNAS; j++){
+            if(bloques[i][j].getGrafico()!= nullptr){
+                if(!bloques[i][j].estaDestruido()){
+                    bloques[i][j].mover();
+                    if(p->colisionaCon(bloques[i][j].getGrafico())){
+                        p->rebotarBloque(bloques[i][j].getGrafico());
+                        bloques[i][j].destruir();
 
-                        bloques[i][j]
-                            .destruir();
+                        if(bloques[i][j].estaDestruido()){
+                            AudioManager::instancia().reproducirRomperBloque();
 
-                        if(
-                            bloques[i][j]
-                                .estaDestruido()
-                            )
-                        {
-                            AudioManager::instancia()
-                            .reproducirRomperBloque();
+                            int tipo =bloques[i][j].getPowerUp();
 
-                            int tipo =
-                                bloques[i][j]
-                                    .getPowerUp();
-
-                            if(tipo != 0)
-                            {
+                            if(tipo != 0){
                                 PowerUp* powerUp;
 
-                                switch(tipo)
-                                {
+                                switch(tipo){
                                 case 1:
-                                    powerUp =
-                                        new PowerUp(
-                                            PALETA_LARGA
-                                            );
+                                    powerUp =new PowerUp(PALETA_LARGA);
                                     break;
-
                                 case 2:
-                                    powerUp =
-                                        new PowerUp(
-                                            VELOCIDAD_EXTRA
-                                            );
+                                    powerUp =new PowerUp(VELOCIDAD_EXTRA);
                                     break;
-
                                 case 3:
-                                    powerUp =
-                                        new PowerUp(
-                                            VIDA_EXTRA
-                                            );
+                                    powerUp =new PowerUp(VIDA_EXTRA);
                                     break;
-
+                                case 4:
+                                    powerUp =new PowerUp(PELOTA_EXTRA);
+                                    break;
+                                case 5:
+                                    powerUp =new PowerUp(PELOTA_LENTA);
+                                    break;
+                                case 6:
+                                    powerUp =new PowerUp(PALETA_LENTA);
+                                    break;
                                 default:
-                                    powerUp =
-                                        new PowerUp(
-                                            PELOTA_EXTRA
-                                            );
+                                    powerUp =new PowerUp(PALETA_MINI);
                                     break;
                                 }
 
-                                powerUp
-                                    ->getGrafico()
-                                    ->setPos(
-                                        bloques[i][j]
-                                            .getGrafico()
-                                            ->sceneBoundingRect()
-                                            .center()
-                                        );
+                                powerUp->getGrafico()->setPos(bloques[i][j].getGrafico()->sceneBoundingRect().center());
 
-                                escena->addItem(
-                                    powerUp
-                                        ->getGrafico()
-                                    );
+                                escena->addItem(powerUp->getGrafico());
 
-                                NodoPowerUp* nuevoNodo =
-                                    new NodoPowerUp;
+                                NodoPowerUp* nuevoNodo =new NodoPowerUp;
 
-                                nuevoNodo->powerUp =
-                                    powerUp;
+                                nuevoNodo->powerUp =powerUp;
 
-                                nuevoNodo->anterior =
-                                    nullptr;
+                                nuevoNodo->anterior =nullptr;
 
-                                nuevoNodo->siguiente =
-                                    inicio;
+                                nuevoNodo->siguiente =inicio;
 
-                                if(inicio != nullptr)
-                                {
-                                    inicio->anterior =
-                                        nuevoNodo;
+                                if(inicio != nullptr){
+                                    inicio->anterior =nuevoNodo;
                                 }
-                                else
-                                {
-                                    fin =
-                                        nuevoNodo;
+                                else{
+                                    fin =nuevoNodo;
                                 }
 
-                                inicio =
-                                    nuevoNodo;
+                                inicio =nuevoNodo;
                             }
 
-                            escena->removeItem(
-                                bloques[i][j]
-                                    .getGrafico()
-                                );
+                            escena->removeItem(bloques[i][j].getGrafico());
 
                             cantBloques--;
                         }
 
-                        if(
-                            bloques[i][j]
-                                .getTipoBloque()
-                            != METALICO
-                            )
-                        {
+                        if(bloques[i][j].getTipoBloque()!= METALICO){
                             puntos += 50;
                         }
 
@@ -992,80 +628,39 @@ void Juego::revisarColisionBloques(
     }
 }
 
-bool Juego::eventFilter(
-    QObject* objeto,
-    QEvent* evento
-    )
-{
-    if(
-        vidas == 0
-        ||
-        cantBloques == 0
-        )
-    {
-        return QObject::eventFilter(
-            objeto,
-            evento
-            );
+bool Juego::eventFilter(QObject* objeto,QEvent* evento){
+    if(vidas == 0 || cantBloques == 0){
+        return QObject::eventFilter(objeto,evento);
     }
 
-    if(
-        evento->type()
-        ==
-        QEvent::KeyPress
-        )
-    {
-        QKeyEvent* tecla =
-            static_cast<QKeyEvent*>(
-                evento
-                );
+    if(evento->type() == QEvent::KeyPress){
+        QKeyEvent* tecla =static_cast<QKeyEvent*>(evento);
 
-        if(
-            tecla->key()
-                == Qt::Key_Left
-            ||
-            tecla->key()
-                == Qt::Key_A
-            )
-        {
+        if(tecla->key() == Qt::Key_Left || tecla->key() == Qt::Key_A){
             paleta->moverIzquierda();
-
             return true;
         }
 
         if(
-            tecla->key()
-                == Qt::Key_Right
-            ||
-            tecla->key()
-                == Qt::Key_D
-            )
-        {
+            tecla->key() == Qt::Key_Right || tecla->key() == Qt::Key_D){
             paleta->moverDerecha();
-
             return true;
         }
     }
 
-    return QObject::eventFilter(
-        objeto,
-        evento
-        );
+    return QObject::eventFilter(objeto,evento);
 }
 
-Juego::~Juego()
-{
+Juego::~Juego(){
     delete pelota;
     delete paleta;
     delete timer;
 
-    for(int i = 0; i < FILAS; i++)
-    {
+    for(int i = 0; i < FILAS; i++){
         delete[] bloques[i];
     }
 
-    for(int i = 0; i < 3; i++)
-    {
+    for(int i = 0; i < 3; i++){
         delete corazones[i];
     }
 

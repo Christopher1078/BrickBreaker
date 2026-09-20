@@ -18,6 +18,9 @@ Nivel1::Nivel1(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manage
 
             switch(i){
             case 0:{
+                if(j==6){
+                    bloques[i][j].setPowerUp(6);
+                }
                 ruta=(":/imagenes/bloque_morado.png");
                 break;
             }
@@ -36,6 +39,9 @@ Nivel1::Nivel1(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manage
                 break;
             }
             case 3:{
+                if(j==2){
+                    bloques[i][j].setPowerUp(7);
+                }
                 ruta=(":/imagenes/bloque_naranja.png");
                 break;
             }

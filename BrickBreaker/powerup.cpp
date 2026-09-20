@@ -11,6 +11,14 @@ PowerUp::PowerUp(Tipo tipo) {
         imagen=QPixmap(":/imagenes/paleta_larga.png");
         break;
     }
+    case PALETA_MINI:{
+        imagen=QPixmap(":/imagenes/paleta_mini.png");
+        break;
+    }
+    case PALETA_LENTA:{
+        imagen=QPixmap(":/imagenes/paleta_lenta.png");
+        break;
+    }
     case VELOCIDAD_EXTRA:{
         imagen=QPixmap(":/imagenes/pelota_veloz.png");
         break;
@@ -21,6 +29,10 @@ PowerUp::PowerUp(Tipo tipo) {
     }
     case PELOTA_EXTRA:{
         imagen=QPixmap(":/imagenes/pelota_extra.png");
+        break;
+    }
+    case PELOTA_LENTA:{
+        imagen=QPixmap(":/imagenes/pelota_lenta.png");
         break;
     }
     }

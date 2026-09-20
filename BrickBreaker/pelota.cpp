@@ -10,6 +10,7 @@ Pelota::Pelota()
     velocidadX = 4;
     velocidadY = -4;
     aumentado=false;
+    ralentizado=false;
 }
 
 QGraphicsPixmapItem* Pelota::getGrafico()
@@ -70,12 +71,15 @@ void Pelota::rebotarPaleta(QGraphicsItem* paleta){
 
     QVector2D direccion(porcentaje,-1);
     direccion.normalize();
-    if(aumentado){
-        direccion*=7;
-    }
-    else {
+
+    if(aumentado==ralentizado){
         direccion*=6;
+    }else if(aumentado){
+        direccion*=8;
+    }else if(ralentizado){
+        direccion*=4;
     }
+
     velocidadX=direccion.x();
     velocidadY=direccion.y();
 }
@@ -99,10 +103,6 @@ void Pelota::comprobarParedes()
     if (grafico->y()<= 20){
         reflejar(QVector2D(0,1));
     }
-
-    /*if (grafico->y() >= 590){
-        reflejar(QVector2D(0,-1));
-    }*/
 
     if(grafico->x() > 770){
         grafico->setX(770);
@@ -136,9 +136,13 @@ void Pelota::reiniciarMovimiento(){
 }
 
 void Pelota::aumentarVelocidad(){
+    if(ralentizado){
+        disminuirVelocidad();
+        return;
+    }
     QVector2D velocidad(velocidadX, velocidadY);
     velocidad.normalize();
-    velocidad *= 7;
+    velocidad *= 8;
     velocidadX = velocidad.x();
     velocidadY = velocidad.y();
     aumentado=true;
@@ -151,6 +155,20 @@ void Pelota::disminuirVelocidad(){
     velocidadX = velocidad.x();
     velocidadY = velocidad.y();
     aumentado=false;
+    ralentizado=false;
+}
+
+void Pelota::ralentalizar(){
+    if(aumentado){
+        disminuirVelocidad();
+        return;
+    }
+    QVector2D velocidad(velocidadX,velocidadY);
+    velocidad.normalize();
+    velocidad *= 4;
+    velocidadX = velocidad.x();
+    velocidadY = velocidad.y();
+    ralentizado=true;
 }
 
 Pelota::~Pelota(){

@@ -42,6 +42,12 @@ Nivel5::Nivel5(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manage
                 if(j==2 || j==5){
                     bloques[i][j].setBlindado();
                 }
+                if(j==4){
+                    bloques[i][j].setPowerUp(6);
+                }
+                if(j==6){
+                    bloques[i][j].setPowerUp(7);
+                }
                 ruta=(":/imagenes/bloque_azul.png");
                 break;
             }
@@ -57,6 +63,9 @@ Nivel5::Nivel5(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manage
                 }
                 if(j==6){
                     bloques[i][j].setMovil(500,670);
+                }
+                if(j==7){
+                    bloques[i][j].setPowerUp(5);
                 }
                 ruta=(":/imagenes/bloque_verde.png");
                 break;

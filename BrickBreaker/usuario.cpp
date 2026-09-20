@@ -7,7 +7,7 @@ Usuario::Usuario(std::string nombre, std::string password) {
     for(int i=0;i<5;i++){
         niveles[i]=false;
         estrellas[i]=0;
-        mejorPuntaje[i]=-1;
+        mejorPuntaje[i]=0;
     }
     niveles[0]=true;
 }

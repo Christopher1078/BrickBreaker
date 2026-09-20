@@ -8,6 +8,9 @@ class Paleta
 {
 private:
     QGraphicsPixmapItem* grafico;
+    bool ralentizado;
+    bool mini;
+    bool grande;
 
 public:
     Paleta();
@@ -20,6 +23,9 @@ public:
     void reiniciar();
     void hacerGrande();
     void hacerNormal();
+    void hacerMini();
+    void ralentizar();
+    void derralentizar();
 };
 
 #endif // PALETA_H

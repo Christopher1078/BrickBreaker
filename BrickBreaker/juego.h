@@ -33,8 +33,7 @@ struct NodoPelota
     NodoPelota* anterior;
 };
 
-class Juego : public QObject
-{
+class Juego : public QObject{
     Q_OBJECT
 
 protected:
@@ -80,11 +79,11 @@ protected:
 
     int tiempoPaleta;
     int tiempoVeloz;
+    int tiempoLento;
+    int tiempoMini;
+    int tiempoRalentizado;
 
-    bool eventFilter(
-        QObject* objeto,
-        QEvent* evento
-        ) override;
+    bool eventFilter(QObject* objeto,QEvent* evento) override;
 
     void actualizar();
 
@@ -102,35 +101,20 @@ protected:
 
     void limpiarNivel();
 
-    void calcularPuntaje(
-        int& bonusTiempo,
-        int& bonusVida,
-        int& puntoFinal,
-        int& estrellas
-        );
+    void calcularPuntaje(int& bonusTiempo,int& bonusVida,int& puntoFinal,int& estrellas);
 
     void activarPowerUp(Tipo tipo);
 
-    void eliminarPowerUp(
-        NodoPowerUp* nodo
-        );
+    void eliminarPowerUp(NodoPowerUp* nodo);
 
     void crearPelotaExtra();
 
-    void eliminarPelota(
-        NodoPelota* nodo
-        );
+    void eliminarPelota(NodoPelota* nodo);
 
-    void revisarColisionBloques(
-        Pelota* p
-        );
+    void revisarColisionBloques(Pelota* p);
 
 public:
-    Juego(
-        QGraphicsScene* escena,
-        QGraphicsView* vista,
-        UserManager* manager
-        );
+    Juego(QGraphicsScene* escena,QGraphicsView* vista,UserManager* manager);
 
     virtual ~Juego();
 };

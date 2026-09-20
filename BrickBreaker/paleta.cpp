@@ -8,6 +8,9 @@ Paleta::Paleta()
     grafico->setPos(350, 530);
     grafico->setScale(1);
 
+    mini=false;
+    grande=false;
+    ralentizado=false;
 }
 
 QGraphicsPixmapItem* Paleta::getGrafico(){
@@ -16,12 +19,20 @@ QGraphicsPixmapItem* Paleta::getGrafico(){
 
 void Paleta::moverIzquierda(){
     if (grafico->x() > 20){
+        if(ralentizado){
+            grafico->moveBy(-5,0);
+            return;
+        }
         grafico->moveBy(-20, 0);
     }
 }
 
 void Paleta::moverDerecha(){
     if (grafico->x() + grafico->boundingRect().width() < 790){
+        if(ralentizado){
+            grafico->moveBy(5,0);
+            return;
+        }
         grafico->moveBy(20, 0);
     }
 }
@@ -35,10 +46,33 @@ Paleta::~Paleta(){
 }
 
 void Paleta::hacerGrande(){
-    float nuevoAncho=350*1.05;
+    if(mini){
+        hacerNormal();
+        return;
+    }
+    float nuevoAncho=180*1.25;
     grafico->setPixmap(grafico->pixmap().scaled(nuevoAncho,45));
+    grande=true;
 }
 
 void Paleta::hacerNormal(){
     grafico->setPixmap(grafico->pixmap().scaled(180,45));
+}
+
+void Paleta::hacerMini(){
+    if(grande){
+        hacerNormal();
+        return;
+    }
+    float nuevoAncho=180*0.75;
+    grafico->setPixmap(grafico->pixmap().scaled(nuevoAncho,45));
+    mini=true;
+}
+
+void Paleta::ralentizar(){
+    ralentizado=true;
+}
+
+void Paleta::derralentizar(){
+    ralentizado=false;
 }

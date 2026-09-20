@@ -44,6 +44,9 @@ Nivel3::Nivel3(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manage
                 break;
             }
             case 2:{
+                if(j==4){
+                    bloques[i][j].setPowerUp(6);
+                }
                 ruta=(":/imagenes/bloque_verde.png");
                 break;
             }
