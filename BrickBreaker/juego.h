@@ -9,6 +9,8 @@
 #include <QEvent>
 #include <QColor>
 #include <qgraphicsitem.h>
+#include <QPushButton>
+#include <QWidget>
 
 #include "pelota.h"
 #include "paleta.h"
@@ -18,6 +20,7 @@
 class UserManager;
 class PantallaVictoria;
 class PantallaDerrota;
+class MenuNiveles;
 
 struct NodoPowerUp
 {
@@ -56,6 +59,13 @@ protected:
 
     QTimer* timer;
 
+    QPushButton* btnPausa;
+    QWidget* menuPausa;
+    QPushButton* btnRendirse;
+    QPushButton* btnResumir;
+    bool pausado;
+    bool saliendoDelNivel;
+
     Pelota* pelota;
     Paleta* paleta;
 
@@ -90,6 +100,16 @@ protected:
     void iniciarTimer();
 
     void crearBarraSuperior();
+
+    void crearMenuPausa();
+
+    void pausarJuego();
+
+    void resumirJuego();
+
+    void rendirse();
+
+    void ocultarControlesPausa();
 
     void actualizarBarra();
 

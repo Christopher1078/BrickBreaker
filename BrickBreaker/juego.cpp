@@ -4,6 +4,9 @@
 #include "pantallavictoria.h"
 #include "usermanager.h"
 #include "audiomanager.h"
+#include "menuniveles.h"
+
+#include <QLabel>
 
 Juego::Juego(QGraphicsScene* escena,QGraphicsView* vista,UserManager* manager){
     this->escena = escena;
@@ -22,6 +25,15 @@ Juego::Juego(QGraphicsScene* escena,QGraphicsView* vista,UserManager* manager){
     pelotaInicio = nullptr;
     pelotaFin = nullptr;
 
+    bloques = nullptr;
+
+    btnPausa = nullptr;
+    menuPausa = nullptr;
+    btnRendirse = nullptr;
+    btnResumir = nullptr;
+    pausado = false;
+    saliendoDelNivel = false;
+
     vidas = 3;
     puntos = 0;
     tiempo = 0;
@@ -39,6 +51,7 @@ Juego::Juego(QGraphicsScene* escena,QGraphicsView* vista,UserManager* manager){
 
     crearBarraSuperior();
     actualizarBarra();
+    crearMenuPausa();
 
     vista->installEventFilter(this);
     vista->setFocusPolicy(Qt::StrongFocus);
@@ -86,6 +99,141 @@ void Juego::crearBarraSuperior(){
     txtTiempo->setFont(fuente);
     txtTiempo->setDefaultTextColor(Qt::white);
     txtTiempo->setPos(630, 10);
+}
+
+void Juego::crearMenuPausa(){
+    btnPausa = new QPushButton("PAUSA", vista);
+    btnPausa->setGeometry(680, 535, 110, 48);
+    btnPausa->setCursor(Qt::PointingHandCursor);
+    btnPausa->setStyleSheet(
+        "QPushButton {"
+        "background-color: rgba(20, 20, 20, 210);"
+        "color: white;"
+        "border: 2px solid white;"
+        "border-radius: 10px;"
+        "font: bold 16px 'Courier New';"
+        "}"
+        "QPushButton:hover { background-color: rgba(55, 55, 55, 230); }"
+        "QPushButton:pressed { background-color: rgba(90, 90, 90, 230); }"
+        );
+    btnPausa->show();
+
+    menuPausa = new QWidget(vista);
+    menuPausa->setGeometry(235, 145, 350, 310);
+    menuPausa->setStyleSheet(
+        "QWidget {"
+        "background-color: rgba(10, 10, 10, 235);"
+        "border: 3px solid white;"
+        "border-radius: 18px;"
+        "}"
+        );
+
+    QLabel* titulo = new QLabel("PAUSA", menuPausa);
+    titulo->setGeometry(25, 30, 300, 55);
+    titulo->setAlignment(Qt::AlignCenter);
+    titulo->setStyleSheet(
+        "QLabel {"
+        "color: white;"
+        "background: transparent;"
+        "border: none;"
+        "font: bold 30px 'Courier New';"
+        "}"
+        );
+
+    btnResumir = new QPushButton("RESUMIR", menuPausa);
+    btnResumir->setGeometry(55, 115, 240, 58);
+    btnResumir->setCursor(Qt::PointingHandCursor);
+    btnResumir->setStyleSheet(
+        "QPushButton {"
+        "background-color: rgba(35, 120, 70, 230);"
+        "color: white;"
+        "border: 2px solid white;"
+        "border-radius: 10px;"
+        "font: bold 18px 'Courier New';"
+        "}"
+        "QPushButton:hover { background-color: rgba(45, 150, 85, 240); }"
+        );
+
+    btnRendirse = new QPushButton("RENDIRSE", menuPausa);
+    btnRendirse->setGeometry(55, 195, 240, 58);
+    btnRendirse->setCursor(Qt::PointingHandCursor);
+    btnRendirse->setStyleSheet(
+        "QPushButton {"
+        "background-color: rgba(145, 45, 45, 230);"
+        "color: white;"
+        "border: 2px solid white;"
+        "border-radius: 10px;"
+        "font: bold 18px 'Courier New';"
+        "}"
+        "QPushButton:hover { background-color: rgba(180, 55, 55, 240); }"
+        );
+
+    connect(btnPausa, &QPushButton::clicked, this, &Juego::pausarJuego);
+    connect(btnResumir, &QPushButton::clicked, this, &Juego::resumirJuego);
+    connect(btnRendirse, &QPushButton::clicked, this, &Juego::rendirse);
+
+    menuPausa->hide();
+}
+
+void Juego::pausarJuego(){
+    if(pausado || saliendoDelNivel || vidas <= 0 || cantBloques == 0){
+        return;
+    }
+
+    pausado = true;
+    timer->stop();
+    btnPausa->hide();
+    menuPausa->show();
+    menuPausa->raise();
+    btnResumir->setFocus();
+}
+
+void Juego::resumirJuego(){
+    if(!pausado || saliendoDelNivel){
+        return;
+    }
+
+    pausado = false;
+    menuPausa->hide();
+    btnPausa->show();
+    vista->setFocus();
+    timer->start(16);
+}
+
+void Juego::rendirse(){
+    if(saliendoDelNivel){
+        return;
+    }
+
+    saliendoDelNivel = true;
+    pausado = false;
+    timer->stop();
+    vista->removeEventFilter(this);
+
+    ocultarControlesPausa();
+    limpiarNivel();
+
+    // Borra el fondo y cualquier elemento visual que no pertenezca al objeto Juego.
+    escena->clear();
+
+    new MenuNiveles(escena, vista, manager);
+
+    // El nivel ya no se usa. Se destruye al volver al bucle de eventos para
+    // liberar pelota, paleta, bloques, timer y los controles del nivel sin
+    // destruir el objeto mientras todavía se procesa el clic del botón.
+    deleteLater();
+}
+
+void Juego::ocultarControlesPausa(){
+    pausado = false;
+
+    if(btnPausa != nullptr){
+        btnPausa->hide();
+    }
+
+    if(menuPausa != nullptr){
+        menuPausa->hide();
+    }
 }
 
 void Juego::iniciarTimer(){
@@ -339,6 +487,8 @@ void Juego::verificarVictoria()
 }
 
 void Juego::limpiarNivel(){
+    ocultarControlesPausa();
+
     if(pelota != nullptr && pelota->getGrafico() != nullptr){
         escena->removeItem(pelota->getGrafico());
     }
@@ -629,6 +779,10 @@ void Juego::revisarColisionBloques(Pelota* p){
 }
 
 bool Juego::eventFilter(QObject* objeto,QEvent* evento){
+    if(pausado || saliendoDelNivel){
+        return QObject::eventFilter(objeto,evento);
+    }
+
     if(vidas == 0 || cantBloques == 0){
         return QObject::eventFilter(objeto,evento);
     }
@@ -652,17 +806,45 @@ bool Juego::eventFilter(QObject* objeto,QEvent* evento){
 }
 
 Juego::~Juego(){
-    delete pelota;
-    delete paleta;
-    delete timer;
-
-    for(int i = 0; i < FILAS; i++){
-        delete[] bloques[i];
+    if(vista != nullptr){
+        vista->removeEventFilter(this);
     }
+
+    delete btnPausa;
+    btnPausa = nullptr;
+
+    // btnResumir y btnRendirse son hijos de menuPausa y Qt los elimina junto con el panel.
+    delete menuPausa;
+    menuPausa = nullptr;
+    btnResumir = nullptr;
+    btnRendirse = nullptr;
+
+    delete pelota;
+    pelota = nullptr;
+
+    delete paleta;
+    paleta = nullptr;
+
+    delete timer;
+    timer = nullptr;
+
+    if(bloques != nullptr){
+        for(int i = 0; i < FILAS; i++){
+            delete[] bloques[i];
+        }
+        delete[] bloques;
+        bloques = nullptr;
+    }
+
+    delete txtVidas;
+    txtVidas = nullptr;
+    delete txtPuntos;
+    txtPuntos = nullptr;
+    delete txtTiempo;
+    txtTiempo = nullptr;
 
     for(int i = 0; i < 3; i++){
         delete corazones[i];
+        corazones[i] = nullptr;
     }
-
-    delete[] bloques;
 }

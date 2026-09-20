@@ -17,6 +17,7 @@ class PowerUp: public QGraphicsPixmapItem
 {
 public:
     PowerUp(Tipo tipo);
+    ~PowerUp();
     void mover();
     Tipo getTipo();
     QGraphicsPixmapItem* getGrafico();

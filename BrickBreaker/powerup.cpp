@@ -53,3 +53,8 @@ Tipo PowerUp::getTipo(){
 QGraphicsPixmapItem* PowerUp::getGrafico(){
     return grafico;
 }
+
+PowerUp::~PowerUp(){
+    delete grafico;
+    grafico = nullptr;
+}
