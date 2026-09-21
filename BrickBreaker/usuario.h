@@ -2,13 +2,13 @@
 #define USUARIO_H
 
 #include <string>
-
+using namespace std;
 class Usuario
 {
 public:
-    Usuario(std::string nombre, std::string password);
-    std::string getNombre();
-    std::string getPassword();
+    Usuario(string nombre, string password);
+    string getNombre();
+    string getPassword();
     void pasarNivel();
     int getUltimoNivel();
     bool isPasado(int nivel);
@@ -17,8 +17,8 @@ public:
     void setMejorPuntaje(int puntaje, int nivel);
     void setEstrellas(int estrella, int nivel);
 private:
-    std::string nombre;
-    std::string password;
+    string nombre;
+    string password;
     bool niveles[5];
     int estrellas[5];
     int mejorPuntaje[5];

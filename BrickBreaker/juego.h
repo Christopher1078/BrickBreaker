@@ -12,6 +12,7 @@
 #include <QPushButton>
 #include <QWidget>
 #include <QString>
+#include <string>
 
 #include "pelota.h"
 #include "paleta.h"
@@ -42,8 +43,8 @@ class Juego : public QObject{
     Q_OBJECT
 
 protected:
-    const int FILAS = 5;
-    const int COLUMNAS = 8;
+    static constexpr int FILAS = 5;
+    static constexpr int COLUMNAS = 8;
 
     QGraphicsScene* escena;
     QGraphicsView* vista;
@@ -65,7 +66,9 @@ protected:
     QWidget* menuPausa;
     QPushButton* btnRendirse;
     QPushButton* btnResumir;
+    QPushButton* btnGuardar;
     QLabel* lblEspera;
+    QLabel* lblGuardado;
     bool pausado;
     bool saliendoDelNivel;
     bool esperandoInicio;
@@ -112,6 +115,14 @@ protected:
     void resumirJuego();
 
     void rendirse();
+
+    void guardarJuego();
+
+    bool cargarJuegoGuardado();
+
+    void eliminarJuegoGuardado();
+
+    std::string rutaJuegoGuardado() const;
 
     void ocultarControlesPausa();
 

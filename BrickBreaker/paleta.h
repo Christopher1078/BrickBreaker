@@ -26,6 +26,11 @@ public:
     void hacerMini();
     void ralentizar();
     void derralentizar();
+
+    bool estaGrande() const;
+    bool estaMini() const;
+    bool estaRalentizada() const;
+    void restaurarEstado(float x, float y, bool grande, bool mini, bool ralentizada);
 };
 
 #endif // PALETA_H

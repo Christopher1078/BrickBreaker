@@ -4,6 +4,7 @@
 Usuario::Usuario(std::string nombre, std::string password) {
     this->nombre=nombre;
     this->password=password;
+
     for(int i=0;i<5;i++){
         niveles[i]=false;
         estrellas[i]=0;

@@ -11,8 +11,7 @@ AudioManager& AudioManager::instancia()
     return instanciaUnica;
 }
 
-AudioManager::AudioManager(QObject* parent)
-    : QObject(parent)
+AudioManager::AudioManager(QObject* parent): QObject(parent)
 {
     volumenMusica = 70;
     volumenEfectos = 80;
@@ -41,27 +40,15 @@ AudioManager::AudioManager(QObject* parent)
 
     sonidoRomperBloque = new QMediaPlayer(this);
     salidaRomperBloque = new QAudioOutput(this);
-    sonidoRomperBloque->setAudioOutput(
-        salidaRomperBloque
-        );
+    sonidoRomperBloque->setAudioOutput(salidaRomperBloque);
 
-    QString carpetaAudio =
-        QCoreApplication::applicationDirPath()
-        + "/audio/";
+    QString carpetaAudio =QCoreApplication::applicationDirPath() + "/audio/";
 
 
-    musica->setSource(
-        QUrl::fromLocalFile(
-            carpetaAudio + "musica.mp3"
-            )
-        );
+    musica->setSource( QUrl::fromLocalFile(carpetaAudio + "musica.mp3"));
 
 
-    sonidoPowerUp->setSource(
-        QUrl::fromLocalFile(
-            carpetaAudio + "PowerUpSi.mpeg"
-            )
-        );
+    sonidoPowerUp->setSource(QUrl::fromLocalFile(carpetaAudio + "PowerUpSi.mpeg"));
 
 
     sonidoVida->setSource( QUrl::fromLocalFile(carpetaAudio + "LifeLose.mp3" ));
@@ -72,11 +59,7 @@ AudioManager::AudioManager(QObject* parent)
     sPaleta->setSource(QUrl::fromLocalFile(carpetaAudio + "PaletaBounce.wav"));
     aplicarVolumenes();
 
-    connect(
-        musica,
-        &QMediaPlayer::mediaStatusChanged,
-        this,
-        [this](QMediaPlayer::MediaStatus estado)
+    connect( musica,&QMediaPlayer::mediaStatusChanged,this,[this](QMediaPlayer::MediaStatus estado)
         {
             if(estado == QMediaPlayer::EndOfMedia)
             {
@@ -89,10 +72,7 @@ AudioManager::AudioManager(QObject* parent)
 
 void AudioManager::reproducirMusica()
 {
-    if(
-        musica->playbackState()
-        != QMediaPlayer::PlayingState
-        )
+    if(musica->playbackState()!= QMediaPlayer::PlayingState)
     {
         musica->play();
     }

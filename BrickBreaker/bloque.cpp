@@ -111,3 +111,36 @@ void Bloque::mover(){
         velocidad = -velocidad;
     }
 }
+
+int Bloque::getGolpes() const{
+    return golpes;
+}
+
+float Bloque::getVelocidad() const{
+    return velocidad;
+}
+
+void Bloque::restaurarEstado(bool estadoDestruido, int golpesRestantes, float x, float y, float nuevaVelocidad){
+    destruido = estadoDestruido;
+    golpes = golpesRestantes;
+    velocidad = nuevaVelocidad;
+
+    if(grafico == nullptr){
+        return;
+    }
+
+    grafico->setPos(x, y);
+
+    if(tipoBloque == BLINDADO && !destruido){
+        QString ruta = ":/imagenes/blindado_0.png";
+        if(golpes == 2){
+            ruta = ":/imagenes/blindado_1.png";
+        }else if(golpes == 1){
+            ruta = ":/imagenes/blindado_2.png";
+        }
+
+        QPixmap imagen(ruta);
+        imagen = imagen.scaled(75, 45, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+        grafico->setPixmap(imagen);
+    }
+}

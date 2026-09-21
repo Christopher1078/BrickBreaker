@@ -8,6 +8,11 @@
 
 #include <QLabel>
 
+#include <filesystem>
+#include <fstream>
+#include <iomanip>
+#include <system_error>
+
 Juego::Juego(QGraphicsScene* escena,QGraphicsView* vista,UserManager* manager){
     this->escena = escena;
     this->vista = vista;
@@ -31,7 +36,9 @@ Juego::Juego(QGraphicsScene* escena,QGraphicsView* vista,UserManager* manager){
     menuPausa = nullptr;
     btnRendirse = nullptr;
     btnResumir = nullptr;
+    btnGuardar = nullptr;
     lblEspera = nullptr;
+    lblGuardado = nullptr;
     pausado = false;
     saliendoDelNivel = false;
     esperandoInicio = false;
@@ -121,7 +128,7 @@ void Juego::crearMenuPausa(){
     btnPausa->show();
 
     menuPausa = new QWidget(vista);
-    menuPausa->setGeometry(235, 145, 350, 310);
+    menuPausa->setGeometry(225, 100, 370, 405);
     menuPausa->setStyleSheet(
         "QWidget {"
         "background-color: rgba(10, 10, 10, 235);"
@@ -131,7 +138,7 @@ void Juego::crearMenuPausa(){
         );
 
     QLabel* titulo = new QLabel("PAUSA", menuPausa);
-    titulo->setGeometry(25, 30, 300, 55);
+    titulo->setGeometry(35, 20, 300, 55);
     titulo->setAlignment(Qt::AlignCenter);
     titulo->setStyleSheet(
         "QLabel {"
@@ -142,8 +149,8 @@ void Juego::crearMenuPausa(){
         "}"
         );
 
-    btnResumir = new QPushButton("RESUMIR", menuPausa);
-    btnResumir->setGeometry(55, 115, 240, 58);
+    btnResumir = new QPushButton("CONTINUAR", menuPausa);
+    btnResumir->setGeometry(65, 90, 240, 58);
     btnResumir->setCursor(Qt::PointingHandCursor);
     btnResumir->setStyleSheet(
         "QPushButton {"
@@ -156,8 +163,22 @@ void Juego::crearMenuPausa(){
         "QPushButton:hover { background-color: rgba(45, 150, 85, 240); }"
         );
 
+    btnGuardar = new QPushButton("GUARDAR EL JUEGO", menuPausa);
+    btnGuardar->setGeometry(65, 165, 240, 58);
+    btnGuardar->setCursor(Qt::PointingHandCursor);
+    btnGuardar->setStyleSheet(
+        "QPushButton {"
+        "background-color: rgba(55, 90, 150, 230);"
+        "color: white;"
+        "border: 2px solid white;"
+        "border-radius: 10px;"
+        "font: bold 16px 'Courier New';"
+        "}"
+        "QPushButton:hover { background-color: rgba(70, 115, 185, 240); }"
+        );
+
     btnRendirse = new QPushButton("RENDIRSE", menuPausa);
-    btnRendirse->setGeometry(55, 195, 240, 58);
+    btnRendirse->setGeometry(65, 240, 240, 58);
     btnRendirse->setCursor(Qt::PointingHandCursor);
     btnRendirse->setStyleSheet(
         "QPushButton {"
@@ -170,8 +191,22 @@ void Juego::crearMenuPausa(){
         "QPushButton:hover { background-color: rgba(180, 55, 55, 240); }"
         );
 
+    lblGuardado = new QLabel("", menuPausa);
+    lblGuardado->setGeometry(35, 315, 300, 52);
+    lblGuardado->setAlignment(Qt::AlignCenter);
+    lblGuardado->setWordWrap(true);
+    lblGuardado->setStyleSheet(
+        "QLabel {"
+        "color: rgb(130, 255, 170);"
+        "background: transparent;"
+        "border: none;"
+        "font: bold 14px 'Courier New';"
+        "}"
+        );
+
     connect(btnPausa, &QPushButton::clicked, this, &Juego::pausarJuego);
     connect(btnResumir, &QPushButton::clicked, this, &Juego::resumirJuego);
+    connect(btnGuardar, &QPushButton::clicked, this, &Juego::guardarJuego);
     connect(btnRendirse, &QPushButton::clicked, this, &Juego::rendirse);
 
     menuPausa->hide();
@@ -201,6 +236,9 @@ void Juego::pausarJuego(){
     pausado = true;
     timer->stop();
     btnPausa->hide();
+    if(lblGuardado != nullptr){
+        lblGuardado->clear();
+    }
     menuPausa->show();
     menuPausa->raise();
     btnResumir->setFocus();
@@ -231,15 +269,322 @@ void Juego::rendirse(){
     ocultarControlesPausa();
     limpiarNivel();
 
-    // Borra el fondo y cualquier elemento visual que no pertenezca al objeto Juego.
+
     escena->clear();
 
     new MenuNiveles(escena, vista, manager);
 
-    // El nivel ya no se usa. Se destruye al volver al bucle de eventos para
-    // liberar pelota, paleta, bloques, timer y los controles del nivel sin
-    // destruir el objeto mientras todavía se procesa el clic del botón.
+
     deleteLater();
+}
+
+std::string Juego::rutaJuegoGuardado() const{
+    if(manager == nullptr || manager->getActual() == nullptr){
+        return "";
+    }
+
+    std::filesystem::path carpeta = std::filesystem::path("Usuarios") / manager->getActual()->getNombre();
+    return (carpeta / ("partida_nivel_" + std::to_string(nivel + 1) + ".dat")).string();
+}
+
+void Juego::guardarJuego(){
+    if(!pausado || saliendoDelNivel || manager == nullptr || manager->getActual() == nullptr){
+        return;
+    }
+
+    std::string ruta = rutaJuegoGuardado();
+    if(ruta.empty()){
+        return;
+    }
+
+    std::filesystem::create_directories(std::filesystem::path(ruta).parent_path());
+    std::ofstream archivo(ruta, std::ios::trunc);
+
+    if(!archivo.is_open()){
+        if(lblGuardado != nullptr){
+            lblGuardado->setStyleSheet(
+                "QLabel { color: rgb(255, 130, 130); background: transparent; border: none; font: bold 14px 'Courier New'; }"
+                );
+            lblGuardado->setText("NO SE PUDO GUARDAR");
+        }
+        return;
+    }
+
+    archivo << std::setprecision(9);
+    archivo << "BRICKBREAKER_SAVE 1\n";
+    archivo << nivel << ' ' << vidas << ' ' << puntos << ' ' << tiempo << ' '
+            << frames << ' ' << cantBloques << '\n';
+    archivo << tiempoPaleta << ' ' << tiempoVeloz << ' ' << tiempoLento << ' '
+            << tiempoMini << ' ' << tiempoRalentizado << '\n';
+
+    archivo << paleta->getGrafico()->x() << ' ' << paleta->getGrafico()->y() << ' '
+            << paleta->estaGrande() << ' ' << paleta->estaMini() << ' '
+            << paleta->estaRalentizada() << '\n';
+
+    archivo << pelota->getGrafico()->x() << ' ' << pelota->getGrafico()->y() << ' '
+            << pelota->getVelocidadX() << ' ' << pelota->getVelocidadY() << ' '
+            << pelota->estaAumentada() << ' ' << pelota->estaRalentizada() << '\n';
+
+    archivo << FILAS * COLUMNAS << '\n';
+    for(int i = 0; i < FILAS; i++){
+        for(int j = 0; j < COLUMNAS; j++){
+            QGraphicsPixmapItem* grafico = bloques[i][j].getGrafico();
+            bool existe = grafico != nullptr;
+            archivo << existe;
+
+            if(existe){
+                archivo << ' ' << bloques[i][j].estaDestruido()
+                << ' ' << bloques[i][j].getGolpes()
+                << ' ' << grafico->x()
+                << ' ' << grafico->y()
+                << ' ' << bloques[i][j].getVelocidad();
+            }
+            archivo << '\n';
+        }
+    }
+
+    int cantidadPelotasExtra = 0;
+    for(NodoPelota* actual = pelotaInicio; actual != nullptr; actual = actual->siguiente){
+        cantidadPelotasExtra++;
+    }
+    archivo << cantidadPelotasExtra << '\n';
+    for(NodoPelota* actual = pelotaInicio; actual != nullptr; actual = actual->siguiente){
+        Pelota* p = actual->pelota;
+        archivo << p->getGrafico()->x() << ' ' << p->getGrafico()->y() << ' '
+                << p->getVelocidadX() << ' ' << p->getVelocidadY() << ' '
+                << p->estaAumentada() << ' ' << p->estaRalentizada() << '\n';
+    }
+
+    int cantidadPowerUps = 0;
+    for(NodoPowerUp* actual = inicio; actual != nullptr; actual = actual->siguiente){
+        cantidadPowerUps++;
+    }
+    archivo << cantidadPowerUps << '\n';
+    for(NodoPowerUp* actual = inicio; actual != nullptr; actual = actual->siguiente){
+        archivo << static_cast<int>(actual->powerUp->getTipo()) << ' '
+                << actual->powerUp->getGrafico()->x() << ' '
+                << actual->powerUp->getGrafico()->y() << '\n';
+    }
+
+    archivo.close();
+
+    if(lblGuardado != nullptr){
+        lblGuardado->setStyleSheet(
+            "QLabel { color: rgb(130, 255, 170); background: transparent; border: none; font: bold 14px 'Courier New'; }"
+            );
+        lblGuardado->setText("PARTIDA GUARDADA");
+    }
+}
+
+bool Juego::cargarJuegoGuardado(){
+    std::string ruta = rutaJuegoGuardado();
+    if(ruta.empty() || !std::filesystem::exists(ruta)){
+        return false;
+    }
+
+    std::ifstream archivo(ruta);
+    if(!archivo.is_open()){
+        return false;
+    }
+
+    std::string firma;
+    int version = 0;
+    archivo >> firma >> version;
+    if(firma != "BRICKBREAKER_SAVE" || version != 1){
+        return false;
+    }
+
+    int nivelGuardado = -1;
+    int vidasGuardadas = 0;
+    int puntosGuardados = 0;
+    int tiempoGuardado = 0;
+    int framesGuardados = 0;
+    int bloquesGuardados = 0;
+    archivo >> nivelGuardado >> vidasGuardadas >> puntosGuardados >> tiempoGuardado
+        >> framesGuardados >> bloquesGuardados;
+
+    if(!archivo.good() || nivelGuardado != nivel){
+        return false;
+    }
+
+    int tPaleta = 0;
+    int tVeloz = 0;
+    int tLento = 0;
+    int tMini = 0;
+    int tRalentizado = 0;
+    archivo >> tPaleta >> tVeloz >> tLento >> tMini >> tRalentizado;
+
+    float paletaX = 0;
+    float paletaY = 0;
+    bool paletaGrande = false;
+    bool paletaMini = false;
+    bool paletaLenta = false;
+    archivo >> paletaX >> paletaY >> paletaGrande >> paletaMini >> paletaLenta;
+
+    float pelotaX = 0;
+    float pelotaY = 0;
+    float pelotaVX = 0;
+    float pelotaVY = 0;
+    bool pelotaAumentada = false;
+    bool pelotaRalentizada = false;
+    archivo >> pelotaX >> pelotaY >> pelotaVX >> pelotaVY >> pelotaAumentada >> pelotaRalentizada;
+
+    int cantidadBloquesArchivo = 0;
+    archivo >> cantidadBloquesArchivo;
+    if(!archivo.good() || cantidadBloquesArchivo != FILAS * COLUMNAS){
+        return false;
+    }
+
+    struct EstadoBloque{
+        bool existe = false;
+        bool destruido = false;
+        int golpes = 0;
+        float x = 0;
+        float y = 0;
+        float velocidad = 0;
+    };
+
+    EstadoBloque estados[FILAS][COLUMNAS];
+    for(int i = 0; i < FILAS; i++){
+        for(int j = 0; j < COLUMNAS; j++){
+            archivo >> estados[i][j].existe;
+            if(estados[i][j].existe){
+                archivo >> estados[i][j].destruido
+                    >> estados[i][j].golpes
+                    >> estados[i][j].x
+                    >> estados[i][j].y
+                    >> estados[i][j].velocidad;
+            }
+        }
+    }
+
+    int cantidadPelotasExtra = 0;
+    archivo >> cantidadPelotasExtra;
+    if(cantidadPelotasExtra < 0 || cantidadPelotasExtra > 20){
+        return false;
+    }
+
+    struct EstadoPelota{
+        float x;
+        float y;
+        float vx;
+        float vy;
+        bool aumentada;
+        bool ralentizada;
+    };
+
+    EstadoPelota extras[20];
+    for(int i = 0; i < cantidadPelotasExtra; i++){
+        archivo >> extras[i].x >> extras[i].y >> extras[i].vx >> extras[i].vy
+            >> extras[i].aumentada >> extras[i].ralentizada;
+    }
+
+    int cantidadPowerUps = 0;
+    archivo >> cantidadPowerUps;
+    if(cantidadPowerUps < 0 || cantidadPowerUps > 40){
+        return false;
+    }
+
+    struct EstadoPowerUp{
+        int tipo;
+        float x;
+        float y;
+    };
+
+    EstadoPowerUp powers[40];
+    for(int i = 0; i < cantidadPowerUps; i++){
+        archivo >> powers[i].tipo >> powers[i].x >> powers[i].y;
+        if(powers[i].tipo < static_cast<int>(PALETA_LARGA) || powers[i].tipo > static_cast<int>(PELOTA_LENTA)){
+            return false;
+        }
+    }
+
+    if(archivo.fail()){
+        return false;
+    }
+
+    vidas = vidasGuardadas;
+    puntos = puntosGuardados;
+    tiempo = tiempoGuardado;
+    frames = framesGuardados;
+    cantBloques = bloquesGuardados;
+    tiempoPaleta = tPaleta;
+    tiempoVeloz = tVeloz;
+    tiempoLento = tLento;
+    tiempoMini = tMini;
+    tiempoRalentizado = tRalentizado;
+
+    paleta->restaurarEstado(paletaX, paletaY, paletaGrande, paletaMini, paletaLenta);
+    pelota->restaurarEstado(pelotaX, pelotaY, pelotaVX, pelotaVY, pelotaAumentada, pelotaRalentizada);
+
+    for(int i = 0; i < FILAS; i++){
+        for(int j = 0; j < COLUMNAS; j++){
+            QGraphicsPixmapItem* grafico = bloques[i][j].getGrafico();
+            if(!estados[i][j].existe || grafico == nullptr){
+                continue;
+            }
+
+            bloques[i][j].restaurarEstado(
+                estados[i][j].destruido,
+                estados[i][j].golpes,
+                estados[i][j].x,
+                estados[i][j].y,
+                estados[i][j].velocidad
+                );
+
+            if(estados[i][j].destruido && grafico->scene() != nullptr){
+                escena->removeItem(grafico);
+            }
+        }
+    }
+
+    for(int i = 0; i < cantidadPelotasExtra; i++){
+        Pelota* nuevaPelota = new Pelota();
+        nuevaPelota->restaurarEstado(
+            extras[i].x, extras[i].y, extras[i].vx, extras[i].vy,
+            extras[i].aumentada, extras[i].ralentizada
+            );
+        escena->addItem(nuevaPelota->getGrafico());
+
+        NodoPelota* nuevo = new NodoPelota;
+        nuevo->pelota = nuevaPelota;
+        nuevo->anterior = nullptr;
+        nuevo->siguiente = pelotaInicio;
+        if(pelotaInicio != nullptr){
+            pelotaInicio->anterior = nuevo;
+        }else{
+            pelotaFin = nuevo;
+        }
+        pelotaInicio = nuevo;
+    }
+
+    for(int i = 0; i < cantidadPowerUps; i++){
+        PowerUp* power = new PowerUp(static_cast<Tipo>(powers[i].tipo));
+        power->getGrafico()->setPos(powers[i].x, powers[i].y);
+        escena->addItem(power->getGrafico());
+
+        NodoPowerUp* nuevo = new NodoPowerUp;
+        nuevo->powerUp = power;
+        nuevo->anterior = nullptr;
+        nuevo->siguiente = inicio;
+        if(inicio != nullptr){
+            inicio->anterior = nuevo;
+        }else{
+            fin = nuevo;
+        }
+        inicio = nuevo;
+    }
+
+    actualizarBarra();
+    return true;
+}
+
+void Juego::eliminarJuegoGuardado(){
+    std::string ruta = rutaJuegoGuardado();
+    if(!ruta.empty()){
+        std::error_code error;
+        std::filesystem::remove(ruta, error);
+    }
 }
 
 void Juego::ocultarControlesPausa(){
@@ -302,7 +647,12 @@ void Juego::comenzarTrasEspera(){
 
 void Juego::iniciarTimer(){
     vista->show();
-    mostrarEspera("PRESIONA W PARA COMENZAR");
+
+    if(cargarJuegoGuardado()){
+        mostrarEspera("PARTIDA CARGADA\nPRESIONA W PARA CONTINUAR");
+    }else{
+        mostrarEspera("PRESIONA W PARA COMENZAR");
+    }
 }
 
 void Juego::actualizar(){
@@ -547,6 +897,7 @@ void Juego::verificarVictoria()
         }
 
         manager->guardarArreglo();
+        eliminarJuegoGuardado();
 
         vista->removeEventFilter(this);
 
@@ -865,7 +1216,7 @@ bool Juego::eventFilter(QObject* objeto,QEvent* evento){
                 comenzarTrasEspera();
             }
 
-            // Mientras espera la W no se permite mover la paleta con otras teclas.
+
             return true;
         }
 
@@ -897,11 +1248,13 @@ Juego::~Juego(){
     delete btnPausa;
     btnPausa = nullptr;
 
-    // btnResumir y btnRendirse son hijos de menuPausa y Qt los elimina junto con el panel.
+
     delete menuPausa;
     menuPausa = nullptr;
     btnResumir = nullptr;
     btnRendirse = nullptr;
+    btnGuardar = nullptr;
+    lblGuardado = nullptr;
 
     delete lblEspera;
     lblEspera = nullptr;

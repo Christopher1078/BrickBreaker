@@ -56,7 +56,10 @@ void Paleta::hacerGrande(){
 }
 
 void Paleta::hacerNormal(){
-    grafico->setPixmap(grafico->pixmap().scaled(180,45));
+    QPixmap imagen(":/imagenes/paleta.png");
+    grafico->setPixmap(imagen.scaled(180,45,Qt::IgnoreAspectRatio,Qt::FastTransformation));
+    mini=false;
+    grande=false;
 }
 
 void Paleta::hacerMini(){
@@ -75,4 +78,36 @@ void Paleta::ralentizar(){
 
 void Paleta::derralentizar(){
     ralentizado=false;
+}
+
+bool Paleta::estaGrande() const{
+    return grande;
+}
+
+bool Paleta::estaMini() const{
+    return mini;
+}
+
+bool Paleta::estaRalentizada() const{
+    return ralentizado;
+}
+
+void Paleta::restaurarEstado(float x, float y, bool estadoGrande, bool estadoMini, bool estadoRalentizado){
+    grande = false;
+    mini = false;
+    ralentizado = false;
+
+    QPixmap imagen(":/imagenes/paleta.png");
+    int ancho = 180;
+    if(estadoGrande){
+        ancho = static_cast<int>(180 * 1.25);
+    }else if(estadoMini){
+        ancho = static_cast<int>(180 * 0.75);
+    }
+
+    grafico->setPixmap(imagen.scaled(ancho, 45, Qt::IgnoreAspectRatio, Qt::FastTransformation));
+    grafico->setPos(x, y);
+    grande = estadoGrande;
+    mini = estadoMini;
+    ralentizado = estadoRalentizado;
 }

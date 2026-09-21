@@ -174,3 +174,26 @@ void Pelota::ralentalizar(){
 Pelota::~Pelota(){
     delete grafico;
 }
+float Pelota::getVelocidadX() const{
+    return velocidadX;
+}
+
+float Pelota::getVelocidadY() const{
+    return velocidadY;
+}
+
+bool Pelota::estaAumentada() const{
+    return aumentado;
+}
+
+bool Pelota::estaRalentizada() const{
+    return ralentizado;
+}
+
+void Pelota::restaurarEstado(float x, float y, float vx, float vy, bool aumentada, bool ralentizada){
+    grafico->setPos(x, y);
+    velocidadX = vx;
+    velocidadY = vy;
+    aumentado = aumentada;
+    ralentizado = ralentizada;
+}

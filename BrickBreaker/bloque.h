@@ -38,6 +38,10 @@ public:
     void setPowerUp(int powerUp);
     TipoBloque getTipoBloque();
     void mover();
+
+    int getGolpes() const;
+    float getVelocidad() const;
+    void restaurarEstado(bool destruido, int golpes, float x, float y, float velocidad);
 };
 
 #endif // BLOQUE_H

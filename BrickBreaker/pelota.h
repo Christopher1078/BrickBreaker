@@ -33,6 +33,12 @@ public:
     void aumentarVelocidad();
     void disminuirVelocidad();
     void ralentalizar();
+
+    float getVelocidadX() const;
+    float getVelocidadY() const;
+    bool estaAumentada() const;
+    bool estaRalentizada() const;
+    void restaurarEstado(float x, float y, float vx, float vy, bool aumentada, bool ralentizada);
 };
 
 #endif // PELOTA_H
