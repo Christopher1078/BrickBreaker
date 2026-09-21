@@ -14,6 +14,8 @@ private:
     float velocidadY;
     bool aumentado;
     bool ralentizado;
+    float xAnterior;
+    float yAnterior;
 
 public:
     Pelota();

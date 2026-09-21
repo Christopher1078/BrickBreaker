@@ -1,7 +1,7 @@
 #include "nivel3.h"
 
 Nivel3::Nivel3(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manager):Juego(escena,vista,manager) {
-    tiempoObjetivo=200;
+    tiempoObjetivo=180;
     bonusObjetivo=1500;
     nivel=2;
 

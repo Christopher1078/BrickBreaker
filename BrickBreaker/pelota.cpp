@@ -7,10 +7,12 @@ Pelota::Pelota()
     grafico = new QGraphicsPixmapItem(imagen);
     grafico->setPos(390, 500);
 
-    velocidadX = 4;
-    velocidadY = -4;
+    velocidadX = 0;
+    velocidadY = -6;
     aumentado=false;
     ralentizado=false;
+    xAnterior=390;
+    yAnterior=500;
 }
 
 QGraphicsPixmapItem* Pelota::getGrafico()
@@ -28,35 +30,44 @@ void Pelota::reflejar(QVector2D normal){
 }
 
 void Pelota::rebotarBloque(QGraphicsItem* bloque){
-    QRectF pelotaRect = grafico->sceneBoundingRect();
-    QRectF bloqueRect = bloque->sceneBoundingRect();
+    QRectF p = grafico->sceneBoundingRect();
+    QRectF b = bloque->sceneBoundingRect();
+    QRectF antes(xAnterior, yAnterior, p.width(), p.height());
 
-    float solapamientoX = std::min(pelotaRect.right(), bloqueRect.right()) - std::max(pelotaRect.left(), bloqueRect.left());
-    float solapamientoY = std::min(pelotaRect.bottom(), bloqueRect.bottom()) - std::max(pelotaRect.top(), bloqueRect.top());
-
-    if(solapamientoX <= 0 || solapamientoY <= 0){
+    float solapX = std::min(p.right(), b.right()) - std::max(p.left(), b.left());
+    float solapY = std::min(p.bottom(), b.bottom()) - std::max(p.top(), b.top());
+    if(solapX <= 0 || solapY <= 0){
         return;
     }
 
-    float direccionX = velocidadX;
-    float direccionY = velocidadY;
+    bool antesEnX = antes.right() > b.left() && antes.left() < b.right();
+    bool antesEnY = antes.bottom() > b.top() && antes.top() < b.bottom();
 
-    if(solapamientoX < solapamientoY){
-        if(direccionX > 0){
-            grafico->moveBy(-solapamientoX, 0);
-        }else{
-            grafico->moveBy(solapamientoX, 0);
-        }
-        velocidadX = -velocidadX;
+    bool vertical;
+    if(antesEnX && !antesEnY){
+        vertical = true;
+    }else if(antesEnY && !antesEnX){
+        vertical = false;
+    }else{
+        vertical = (solapY <= solapX);
     }
 
-    else{
-        if(direccionY > 0){
-            grafico->moveBy(0, -solapamientoY);
+    if(vertical){
+        if(p.center().y() < b.center().y()){
+            grafico->moveBy(0, -solapY);
+            velocidadY = -std::abs(velocidadY);
         }else{
-            grafico->moveBy(0, solapamientoY);
+            grafico->moveBy(0, solapY);
+            velocidadY = std::abs(velocidadY);
         }
-        velocidadY = -velocidadY;
+    }else{
+        if(p.center().x() < b.center().x()){
+            grafico->moveBy(-solapX, 0);
+            velocidadX = -std::abs(velocidadX);
+        }else{
+            grafico->moveBy(solapX, 0);
+            velocidadX = std::abs(velocidadX);
+        }
     }
 }
 
@@ -86,7 +97,10 @@ void Pelota::rebotarPaleta(QGraphicsItem* paleta){
 
 void Pelota::mover()
 {
-    grafico->moveBy(velocidadX, velocidadY);
+    float fraccion=1.0f;
+    xAnterior = grafico->x();
+    yAnterior = grafico->y();
+    grafico->moveBy(velocidadX * fraccion, velocidadY * fraccion);
 }
 
 void Pelota::comprobarParedes()
@@ -122,7 +136,7 @@ void Pelota::rebotarVertical()
 
 bool Pelota::colisionaCon(QGraphicsItem* objeto)
 {
-    return grafico->collidesWithItem(objeto);
+    return grafico->sceneBoundingRect().intersects(objeto->sceneBoundingRect());
 }
 
 bool Pelota::estaBajando()
@@ -131,8 +145,8 @@ bool Pelota::estaBajando()
 }
 
 void Pelota::reiniciarMovimiento(){
-    velocidadX=4;
-    velocidadY=-4;
+    velocidadX=0;
+    velocidadY=-6;
 }
 
 void Pelota::aumentarVelocidad(){

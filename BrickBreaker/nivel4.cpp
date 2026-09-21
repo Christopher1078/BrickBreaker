@@ -1,7 +1,7 @@
 #include "nivel4.h"
 
 Nivel4::Nivel4(QGraphicsScene* escena, QGraphicsView* vista, UserManager* manager):Juego(escena,vista,manager) {
-    tiempoObjetivo=230;
+    tiempoObjetivo=180;
     bonusObjetivo=1500;
     nivel=3;
 

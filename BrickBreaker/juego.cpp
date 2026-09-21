@@ -817,6 +817,13 @@ void Juego::actualizar(){
 
         pelotaActual = siguiente;
     }
+    for(int i = 0; i < FILAS; i++){
+        for(int j = 0; j < COLUMNAS; j++){
+            if(bloques[i][j].getGrafico() != nullptr && !bloques[i][j].estaDestruido()){
+                bloques[i][j].mover();
+            }
+        }
+    }
 }
 
 void Juego::actualizarBarra()
@@ -1119,7 +1126,6 @@ void Juego::revisarColisionBloques(Pelota* p){
         for(int j = 0; j < COLUMNAS; j++){
             if(bloques[i][j].getGrafico()!= nullptr){
                 if(!bloques[i][j].estaDestruido()){
-                    bloques[i][j].mover();
                     if(p->colisionaCon(bloques[i][j].getGrafico())){
                         p->rebotarBloque(bloques[i][j].getGrafico());
                         bloques[i][j].destruir();
